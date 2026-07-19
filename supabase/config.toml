@@ -6,3 +6,6 @@ verify_jwt = false
 
 [functions.subscribe-newsletter]
 verify_jwt = false
+
+[functions.confirm-order]
+verify_jwt = false

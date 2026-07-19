@@ -51,3 +51,5 @@ Before launch, replace the sample soaps/accessories, business email, social link
 - The protected dashboard is at `admin.html`.
 - Sign up with `adw.com1660@gmail.com` and confirm the email to receive the admin role.
 - Product, order, subscriber, and profile access remains enforced by database RLS even if someone directly opens the admin URL.
+- Product photos can be uploaded directly from the protected dashboard. Supported formats are JPG, PNG, and WebP up to 5 MB.
+- Stripe returns successful payments through the `confirm-order` function so orders are saved even if webhook delivery is delayed.
