@@ -20,7 +20,7 @@ Open `http://localhost:8080`.
 
 1. Create a Supabase project.
 2. In the SQL Editor, run `supabase/migrations/001_store.sql`.
-3. Copy the project URL and publishable key from Project Settings → API into `config.js`.
+3. The storefront is configured for Supabase project `rfauhbcnrmwqyowftlcq`.
 4. Use Supabase CLI help to confirm current commands, then link the project and deploy both Edge Functions.
 5. Add function secrets: `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`. Never place them in `config.js` or GitHub.
 
@@ -44,3 +44,10 @@ Prices are read from Supabase inside the checkout function. The browser cannot a
 - Shipping threshold text: announcement bar in `index.html`
 
 Before launch, replace the sample soaps/accessories, business email, social link, return policy, shipping policy, privacy policy, and product photography.
+
+## Store accounts and admin
+
+- Customers use `auth.html` to create an account or sign in.
+- The protected dashboard is at `admin.html`.
+- Sign up with `adw.com1660@gmail.com` and confirm the email to receive the admin role.
+- Product, order, subscriber, and profile access remains enforced by database RLS even if someone directly opens the admin URL.

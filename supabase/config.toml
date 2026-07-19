@@ -3,3 +3,6 @@ verify_jwt = false
 
 [functions.stripe-webhook]
 verify_jwt = false
+
+[functions.subscribe-newsletter]
+verify_jwt = false

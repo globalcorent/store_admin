@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Account | Aromatic Designer Works</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="account.css">
+</head>
+<body class="account-page">
+  <main class="account-card">
+    <a href="index.html"><img class="account-logo" src="assets/logo.png" alt="Aromatic Designer Works"></a>
+    <p class="account-kicker">WELCOME TO ADW</p><h1>Your account</h1>
+    <p>Sign in to view your account or securely manage the store.</p>
+    <div class="auth-tabs"><button id="signin-tab" class="active">Sign in</button><button id="signup-tab">Create account</button></div>
+    <form id="auth-form">
+      <div id="name-wrap" hidden><label for="name">Full name</label><input id="name" autocomplete="name"></div>
+      <label for="email">Email address</label><input id="email" type="email" autocomplete="email" required>
+      <label for="password">Password</label><input id="password" type="password" minlength="8" autocomplete="current-password" required>
+      <button class="account-primary" type="submit">Sign in</button>
+    </form>
+    <p class="account-message" id="message" aria-live="polite"></p>
+    <a class="account-back" href="index.html">← Back to the store</a>
+  </main>
+  <script src="config.js"></script><script type="module" src="auth.js"></script>
+</body></html>
