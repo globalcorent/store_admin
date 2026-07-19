@@ -8,6 +8,7 @@ const cors = {
 };
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!);
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+const isCandle = (category: string) => category === "gel-candles" || category === "wax-candles";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
@@ -31,12 +32,12 @@ Deno.serve(async (req) => {
       quantity: Math.max(1, Math.min(20, Math.trunc(Number(item.quantity) || 1)))
     }));
     const candleCount = normalized.reduce((total, item) =>
-      total + (byId.get(item.id)?.category === "candles" ? item.quantity : 0), 0);
+      total + (isCandle(byId.get(item.id)?.category || "") ? item.quantity : 0), 0);
     const line_items = normalized.map((item) => {
       const product = byId.get(item.id);
       if (!product) throw new Error("A product is unavailable");
       if (product.inventory !== null && item.quantity > product.inventory) throw new Error(`${product.name} has limited stock`);
-      const bundle = product.category === "candles" && candleCount >= 3;
+      const bundle = isCandle(product.category) && candleCount >= 3;
       return {
         quantity: item.quantity,
         price_data: {

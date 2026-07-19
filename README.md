@@ -1,6 +1,6 @@
 # Aromatic Designer Works Store
 
-Bright, mobile-friendly luxury storefront for candles, soaps and accessories. The catalog is connected to Supabase; Stripe activates secure checkout after its function secrets are configured.
+Mobile-friendly storefront and protected admin for handmade gel candles, wax candles, soaps, and candle accessories. Supabase powers the catalog, product-photo storage, Auth, orders, newsletter, and moderated reviews. Stripe hosts secure checkout.
 
 Store contact: 347-423-9364 · adw.com1660@gmail.com
 
@@ -11,7 +11,7 @@ Current offers: 15% off any three or more candles, automatically applied; free s
 Serve this folder through a local web server (do not double-click `index.html`):
 
 ```bash
-python3 -m http.server 8080 --directory aromatic-shop
+python3 -m http.server 8080
 ```
 
 Open `http://localhost:8080`.
@@ -19,9 +19,9 @@ Open `http://localhost:8080`.
 ## Connect Supabase
 
 1. Create a Supabase project.
-2. In the SQL Editor, run `supabase/migrations/001_store.sql`.
+2. Apply every file in `supabase/migrations` in numeric order.
 3. The storefront is configured for Supabase project `rfauhbcnrmwqyowftlcq`.
-4. Use Supabase CLI help to confirm current commands, then link the project and deploy both Edge Functions.
+4. Use Supabase CLI help to confirm current commands, then link the project and deploy the four Edge Functions in `supabase/functions`.
 5. Add function secrets: `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`. Never place them in `config.js` or GitHub.
 
 ## Connect Stripe
@@ -37,19 +37,21 @@ Prices are read from Supabase inside the checkout function. The browser cannot a
 
 ## Customize
 
-- Products and prices: Supabase Table Editor → `products`
+- Products, actual photos, details, and inventory: protected `admin.html`
+- Review approval and removal: protected `admin.html`
 - Newsletter signups: Supabase Table Editor → `newsletter_subscribers`
-- Contact email and Instagram: footer links in `index.html`
+- Contact details and store copy: `index.html`
 - Store colors: variables at the top of `styles.css`
 - Shipping threshold text: announcement bar in `index.html`
 
-Before launch, replace the sample soaps/accessories, business email, social link, return policy, shipping policy, privacy policy, and product photography.
+Before launch, add a sharp actual photo, verified size, materials or ingredients, burn time where applicable, and product-specific care instructions to every listing. Do not publish unsupported safety, health, ingredient, or certification claims.
 
 ## Store accounts and admin
 
 - Customers use `auth.html` to create an account or sign in.
 - The protected dashboard is at `admin.html`.
 - Sign up with `adw.com1660@gmail.com` and confirm the email to receive the admin role.
-- Product, order, subscriber, and profile access remains enforced by database RLS even if someone directly opens the admin URL.
+- Product, order, subscriber, review, and profile access remains enforced by database RLS even if someone directly opens the admin URL.
 - Product photos can be uploaded directly from the protected dashboard. Supported formats are JPG, PNG, and WebP up to 5 MB.
+- Customer reviews enter a pending queue and never publish until the administrator approves them.
 - Stripe returns successful payments through the `confirm-order` function so orders are saved even if webhook delivery is delayed.

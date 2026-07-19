@@ -3,20 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Shop handcrafted candles, soaps and home fragrance accessories from Aromatic Designer Works.">
-  <title>Aromatic Designer Works | Candles, Soaps & Accessories</title>
+  <meta name="description" content="Shop handmade gel candles, wax candles, artisan soaps, and candle accessories from Aromatic Designer Works in Brooklyn, New York.">
+  <meta property="og:title" content="Aromatic Designer Works | Handmade Candles & Soaps">
+  <meta property="og:description" content="Handmade glow for every mood. Discover gel candles, wax candles, soaps, and candle-care accessories.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://globalcorent.github.io/store_admin/">
+  <meta property="og:image" content="https://globalcorent.github.io/store_admin/assets/hero-bright.webp">
+  <meta name="theme-color" content="#7b285b">
+  <title>Aromatic Designer Works | Handmade Gel & Wax Candles</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=4">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"OnlineStore","name":"Aromatic Designer Works","url":"https://globalcorent.github.io/store_admin/","description":"Handmade gel candles, wax candles, soaps, and candle accessories from Brooklyn, New York.","email":"adw.com1660@gmail.com","telephone":"+1-347-423-9364","areaServed":"US","paymentAccepted":"Credit Card"}
+  </script>
 </head>
 <body>
-  <div class="announcement"><strong>LAUNCH DEAL:</strong> Buy any 3 candles and save 15% automatically <span>•</span> Free U.S. shipping on $75+</div>
+  <div class="announcement"><strong>HANDMADE IN BROOKLYN</strong><span>•</span> Buy any 3 candles and save 15% <span>•</span> Free U.S. shipping on $75+</div>
   <header class="site-header">
     <a class="brand" href="#top" aria-label="Aromatic Designer Works home"><img src="assets/logo.png" alt="Aromatic Designer Works"></a>
     <button class="nav-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav class="main-nav" aria-label="Main navigation">
-      <a href="#shop">Shop</a><a href="#deals">Deals</a><a href="#story">Our Story</a><a href="#care">Candle Care</a><a href="#policies">Shipping</a><a href="auth.html">Account</a>
+      <a href="#shop">Shop</a><a href="#deals">Deals</a><a href="#story">Our Story</a><a href="#care">Candle Care</a><a href="#faq">FAQ</a><a href="auth.html">Account</a>
     </nav>
     <button class="cart-button" type="button" aria-label="Open shopping cart">Bag <span class="cart-count">0</span></button>
   </header>
@@ -24,87 +33,106 @@
   <main id="top">
     <section class="hero">
       <div class="hero-copy">
-        <div class="deal-pill">🔥 3 CANDLES = 15% OFF</div><p class="eyebrow">HANDCRAFTED • BROOKLYN, NY</p>
-        <h1>Don’t just light a candle. <em>Set the whole mood.</em></h1>
-        <p>Bold fragrance. Rich color. Unforgettable atmosphere. Discover statement candles, artisan soaps, and gift-worthy accessories.</p>
-        <div class="hero-actions"><a class="button primary" href="#shop">Shop the collection</a><a class="text-link" href="#deals">See today’s deals →</a></div>
-      </div>
-      <div class="hero-art" aria-label="Decorative candle display">
-        <span class="sunburst">✺</span><div class="candle candle-tall"><i></i></div><div class="candle candle-short"><i></i></div>
-        <p>Light. Breathe. Restore.</p>
+        <div class="deal-pill">3 CANDLES = 15% OFF AUTOMATICALLY</div>
+        <p class="eyebrow">HANDMADE • BROOKLYN, NEW YORK</p>
+        <h1>Handmade glow. <em>Made to be remembered.</em></h1>
+        <p>Statement gel candles, classic wax candles, artisan soaps, and candle-care essentials—made by hand to turn ordinary moments into a whole mood.</p>
+        <div class="hero-actions"><a class="button primary" href="#shop">Find your favorite</a><a class="text-link" href="#story">Meet the maker →</a></div>
       </div>
     </section>
 
-    <section class="benefits" aria-label="Store benefits">
-      <div><strong>Small-batch made</strong><span>Crafted with attention to detail</span></div>
-      <div><strong>Secure checkout</strong><span>Protected payments with Stripe</span></div>
-      <div><strong>Gift-ready</strong><span>Beautifully packed with care</span></div>
+    <section class="benefits" aria-label="Store guarantees">
+      <div><span class="benefit-icon">✦</span><strong>Handmade in small batches</strong><span>Made with personal attention</span></div>
+      <div><span class="benefit-icon">⌁</span><strong>Secure Stripe checkout</strong><span>Card details stay protected</span></div>
+      <div><span class="benefit-icon">▣</span><strong>Free shipping $75+</strong><span>Standard U.S. delivery</span></div>
+      <div><span class="benefit-icon">↩</span><strong>14-day returns</strong><span>Unopened and unused items</span></div>
     </section>
 
     <section class="shop-section" id="shop">
-      <div class="section-heading"><div><p class="eyebrow">THE COLLECTION</p><h2>Shop by your mood</h2></div><p>Made to look beautiful, smell unforgettable, and add a little joy to the day.</p></div>
+      <div class="section-heading"><div><p class="eyebrow">SHOP THE COLLECTION</p><h2>Choose your kind of glow</h2></div><p>From crystal-clear gel designs to familiar wax favorites, every piece is made for atmosphere, self-care, and thoughtful gifting.</p></div>
       <div class="category-showcase">
-        <button class="category-tile tall" data-category-jump="candles"><img src="assets/collection-candles.webp" alt="Colorful luxury candle collection"><span><small>LIGHT THE ROOM</small><strong>Candles</strong><i>Shop now →</i></span></button>
-        <button class="category-tile" data-category-jump="soaps"><img src="assets/collection-soaps.webp" alt="Colorful artisan soap collection"><span><small>YOUR DAILY RITUAL</small><strong>Soaps</strong><i>Shop now →</i></span></button>
-        <button class="category-tile" data-category-jump="accessories"><img src="assets/collection-accessories.webp" alt="Gold candle accessories and gift box"><span><small>FINISH THE MOMENT</small><strong>Gifts & Tools</strong><i>Shop now →</i></span></button>
+        <button class="category-tile" data-category-jump="gel-candles"><img src="assets/collection-gel-candles.webp" alt="Decorative handmade gel candles with botanicals"><span><small>CLEAR • COLORFUL • DECORATIVE</small><strong>Gel Candles</strong><i>Shop now →</i></span></button>
+        <button class="category-tile" data-category-jump="wax-candles"><img src="assets/collection-wax-candles.webp" alt="Handmade wax candles in elegant vessels"><span><small>CLASSIC • WARM • ATMOSPHERIC</small><strong>Wax Candles</strong><i>Shop now →</i></span></button>
+        <button class="category-tile" data-category-jump="soaps"><img src="assets/collection-soaps.webp" alt="Colorful handmade artisan soap collection"><span><small>YOUR EVERYDAY RITUAL</small><strong>Handmade Soaps</strong><i>Shop now →</i></span></button>
+        <button class="category-tile" data-category-jump="accessories"><img src="assets/collection-accessories.webp" alt="Candle accessories and gift box"><span><small>TRIM • SNUFF • GIFT</small><strong>Accessories</strong><i>Shop now →</i></span></button>
       </div>
       <div class="filters" role="group" aria-label="Filter products">
-        <button class="filter active" data-category="all">All</button><button class="filter" data-category="candles">Candles</button><button class="filter" data-category="soaps">Soaps</button><button class="filter" data-category="accessories">Accessories</button>
+        <button class="filter active" data-category="all">All</button><button class="filter" data-category="gel-candles">Gel candles</button><button class="filter" data-category="wax-candles">Wax candles</button><button class="filter" data-category="soaps">Soaps</button><button class="filter" data-category="accessories">Accessories</button>
       </div>
       <div class="product-grid" aria-live="polite"></div>
-      <p class="shop-note">Styled collection previews shown. Final product photography can be added directly through your store catalog.</p>
-      <div class="loading">Loading the collection…</div>
+      <p class="shop-note">Collection imagery sets the mood. Open a product to see its actual photo and complete handmade details as they are added.</p>
+      <div class="loading">Loading the handmade collection…</div>
+    </section>
+
+    <section class="trust-section" aria-label="Why customers can shop confidently">
+      <div class="trust-heading"><p class="eyebrow">SHOP WITH CONFIDENCE</p><h2>Real products. Clear promises. Human support.</h2><p>No mystery policies and no made-up claims—just handmade goods, protected payments, practical candle care, and a real person when you need help.</p></div>
+      <div class="trust-grid">
+        <article><span>01</span><h3>Made by hand</h3><p>Small variations in color and finish are part of what makes each handmade piece unique.</p></article>
+        <article><span>02</span><h3>Protected payment</h3><p>Checkout is securely hosted and processed by Stripe. This store never handles your full card number.</p></article>
+        <article><span>03</span><h3>Clear delivery timing</h3><p>Allow 1 business day for preparation, then approximately 5–7 business days for U.S. delivery.</p></article>
+        <article><span>04</span><h3>Reach the maker</h3><p>Questions before or after ordering? Call or email Aromatic Designer Works directly.</p></article>
+      </div>
     </section>
 
     <section class="deals" id="deals">
-      <div class="deal-intro"><p class="eyebrow">MORE GLOW, MORE SAVINGS</p><h2>Deals worth lighting up for.</h2><p>No confusing coupons. Qualifying offers are applied automatically at secure checkout.</p></div>
+      <div class="deal-intro"><p class="eyebrow">MORE GLOW, MORE VALUE</p><h2>Simple offers. No coupon hunting.</h2><p>Qualifying savings are calculated automatically at secure checkout.</p></div>
       <div class="deal-cards">
-        <article class="deal-card hot"><span>BEST VALUE</span><b>15% OFF</b><h3>Pick any 3 candles</h3><p>Mix your favorite fragrances and the candle discount is applied automatically.</p><a href="#shop">Build your bundle →</a></article>
-        <article class="deal-card"><span>SHIP FREE</span><b>$75+</b><h3>Free U.S. shipping</h3><p>Fill your bag with candles, soaps, gifts, and accessories. We’ll cover standard shipping.</p><a href="#shop">Start shopping →</a></article>
-        <article class="deal-card"><span>GIFT READY</span><b>$49</b><h3>Signature gift set</h3><p>A candle, soap, and care accessory together in one beautiful ready-to-give bundle.</p><a href="#shop">Shop the gift set →</a></article>
+        <article class="deal-card hot"><span>BEST VALUE</span><b>15% OFF</b><h3>Pick any 3 candles</h3><p>Mix gel and wax candles. When your bag has three or more, the candle discount is applied automatically.</p><a href="#shop">Build your bundle →</a></article>
+        <article class="deal-card"><span>SHIP FREE</span><b>$75+</b><h3>Free U.S. shipping</h3><p>Fill your bag with candles, soaps, gifts, and accessories. Standard shipping is on us at $75.</p><a href="#shop">Start shopping →</a></article>
+        <article class="deal-card"><span>READY TO GIVE</span><b>$49</b><h3>Signature gift set</h3><p>A candle, soap, and care accessory together for birthdays, thank-yous, or a little self-care.</p><a href="#shop">Shop the gift set →</a></article>
       </div>
     </section>
 
     <section class="story" id="story">
       <div class="story-art"><div class="orb">ADW</div><span>Designed for your atmosphere</span></div>
-      <div class="story-copy"><p class="eyebrow">OUR STORY</p><h2>Fragrance is personal. Your home should be too.</h2><p>Aromatic Designer Works creates colorful, aromatic pieces that bring personality into your space. Every collection is inspired by mood, memory, and the simple pleasure of slowing down.</p><p>From statement candles to skin-loving soaps and useful accessories, each item is selected to make self-care and gifting feel effortless.</p><a class="text-link" href="#shop">Explore our products →</a></div>
+      <div class="story-copy"><p class="eyebrow">THE AROMATIC DIFFERENCE</p><h2>Not factory-made. Made with intention.</h2><p>Aromatic Designer Works is a Brooklyn handmade business creating gel candles, wax candles, soaps, and accessories with personality. Each piece starts with a mood, a fragrance idea, and the belief that everyday spaces deserve something special.</p><p>Because handmade pieces can vary slightly, your order may have subtle differences in color or finish. That individuality is part of the craft—not a defect.</p><a class="text-link" href="#shop">Explore the collection →</a></div>
     </section>
 
     <section class="care" id="care">
-      <p class="eyebrow">BURN BEAUTIFULLY</p><h2>Three simple candle-care steps</h2>
-      <div class="care-grid"><article><b>01</b><h3>Trim the wick</h3><p>Trim to ¼ inch before every burn for a cleaner, steadier flame.</p></article><article><b>02</b><h3>Let it pool</h3><p>On the first burn, let wax melt to the edges to prevent tunneling.</p></article><article><b>03</b><h3>Burn safely</h3><p>Keep within sight, away from drafts, and burn for up to four hours.</p></article></div>
+      <p class="eyebrow">BURN BEAUTIFULLY & SAFELY</p><h2>Better care. Better candle.</h2>
+      <div class="care-grid"><article><b>01</b><h3>Trim the wick</h3><p>Trim the wick to ¼ inch before each burn for a calmer, cleaner flame.</p></article><article><b>02</b><h3>Build the first melt pool</h3><p>For wax candles, let the first melt pool reach the edges when possible to help prevent tunneling.</p></article><article><b>03</b><h3>Stay candle-aware</h3><p>Never leave a burning candle unattended. Keep away from children, pets, drafts, and flammable objects; stop after four hours.</p></article></div>
     </section>
 
     <section class="policies" id="policies">
-      <div><p class="eyebrow">GOOD TO KNOW</p><h2>Clear shipping and returns.</h2></div>
+      <div><p class="eyebrow">GOOD TO KNOW</p><h2>Clear before you order.</h2><p class="policy-intro">Review the details now, so there are no surprises later.</p></div>
       <div class="policy-grid">
-        <article><span>📦</span><div><h3>U.S. shipping only</h3><p>We currently ship only within the United States.</p></div></article>
-        <article><span>⏱️</span><div><h3>Processing & delivery</h3><p>Please allow 1 business day to prepare your order, followed by approximately 5–7 business days for delivery.</p></div></article>
-        <article><span>↩️</span><div><h3>14-day returns</h3><p>Returns are accepted within 14 days of delivery only when products are unopened and unused. No exceptions.</p></div></article>
-        <article><span>☎️</span><div><h3>Need help?</h3><p><a href="tel:+13474239364">347-423-9364</a><br><a href="mailto:adw.com1660@gmail.com">adw.com1660@gmail.com</a></p></div></article>
+        <article><span>▣</span><div><h3>U.S. shipping only</h3><p>1 business day to prepare, followed by approximately 5–7 business days for delivery.</p><a href="shipping-returns.html">Shipping details →</a></div></article>
+        <article><span>↩</span><div><h3>14-day returns</h3><p>Eligible only when products are unopened and unused. No exceptions.</p><a href="shipping-returns.html#returns">Return policy →</a></div></article>
+        <article><span>⌕</span><div><h3>Privacy explained</h3><p>Learn what information is used to complete orders and support your experience.</p><a href="privacy.html">Privacy policy →</a></div></article>
+        <article><span>☎</span><div><h3>Need a real person?</h3><p><a href="tel:+13474239364">347-423-9364</a><br><a href="mailto:adw.com1660@gmail.com">adw.com1660@gmail.com</a></p></div></article>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="faq-heading"><p class="eyebrow">QUESTIONS, ANSWERED</p><h2>Know before you glow.</h2></div>
+      <div class="faq-list">
+        <details><summary>What is the difference between gel and wax candles?</summary><p>Gel candles have a transparent look that can showcase color and decorative designs. Wax candles have the familiar opaque finish many candle lovers know. Always follow the care instructions supplied with your specific candle.</p></details>
+        <details><summary>Are the products really handmade?</summary><p>Yes. Aromatic Designer Works makes its candles and soaps by hand in small batches. Natural differences in color, placement, or finish can happen from one piece to the next.</p></details>
+        <details><summary>How long will my order take?</summary><p>Orders are prepared in 1 business day. Standard U.S. delivery is estimated at approximately 5–7 business days after preparation.</p></details>
+        <details><summary>Can I return a used candle or soap?</summary><p>No. Returns must be requested within 14 days of delivery and products must be unopened and unused. There are no exceptions to the condition requirement.</p></details>
+        <details><summary>How do customer reviews work?</summary><p>Reviews can be submitted from each product page. Every review is held for moderation before it appears publicly. Aromatic Designer Works does not publish fabricated reviews.</p></details>
       </div>
     </section>
 
     <section class="newsletter" id="contact">
-      <div><p class="eyebrow">STAY IN THE GLOW</p><h2>New scents, special offers, and a little inspiration.</h2></div>
-      <form class="newsletter-form"><label class="sr-only" for="newsletter-email">Email address</label><input id="newsletter-email" type="email" required placeholder="Your email address"><button class="button light" type="submit">Join the list</button></form>
-      <p class="form-message" aria-live="polite"></p>
+      <div><p class="eyebrow">STAY IN THE GLOW</p><h2>New scents, handmade drops, and special offers.</h2><p>Join for occasional store news. You can unsubscribe from future messages at any time.</p></div>
+      <div><form class="newsletter-form"><label class="sr-only" for="newsletter-email">Email address</label><input id="newsletter-email" type="email" required autocomplete="email" placeholder="Your email address"><button class="button light" type="submit">Join the list</button></form><p class="form-message" aria-live="polite"></p><small>By joining, you agree to the <a href="privacy.html">privacy policy</a>.</small></div>
     </section>
   </main>
 
-  <footer><img src="assets/logo.png" alt="Aromatic Designer Works"><p>Handcrafted candles, soaps & accessories.</p><div><a href="#shop">Shop</a><a href="#policies">Shipping & Returns</a><a href="tel:+13474239364">347-423-9364</a><a href="mailto:adw.com1660@gmail.com">Email</a><a href="auth.html">Account</a></div><small>© <span id="year"></span> Aromatic Designer Works Inc. All rights reserved.</small></footer>
+  <footer><img src="assets/logo.png" alt="Aromatic Designer Works"><p>Handmade gel candles, wax candles, soaps & accessories.</p><div><a href="#shop">Shop</a><a href="shipping-returns.html">Shipping & Returns</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="tel:+13474239364">347-423-9364</a><a href="auth.html">Account</a></div><small>© <span id="year"></span> Aromatic Designer Works Inc. All rights reserved.</small></footer>
 
   <aside class="cart-drawer" aria-hidden="true" aria-label="Shopping cart">
     <div class="cart-head"><div><p class="eyebrow">YOUR BAG</p><h2>Shopping cart</h2></div><button class="icon-button cart-close" aria-label="Close cart">×</button></div>
     <div class="cart-items"></div>
-    <div class="cart-empty"><span>☼</span><h3>Your bag is waiting</h3><p>Add something beautiful from the collection.</p><button class="button primary continue-shopping">Start shopping</button></div>
-    <div class="cart-summary"><div><span>Subtotal</span><strong class="cart-subtotal">$0.00</strong></div><p>Shipping and taxes calculated at checkout.</p><button class="button primary checkout-button">Secure checkout</button><small>🔒 Payments securely processed by Stripe</small></div>
+    <div class="cart-empty"><span>☼</span><h3>Your bag is waiting</h3><p>Add something handmade from the collection.</p><button class="button primary continue-shopping">Start shopping</button></div>
+    <div class="cart-summary"><div><span>Subtotal</span><strong class="cart-subtotal">$0.00</strong></div><div class="shipping-meter"><p class="shipping-progress"></p><span><i></i></span></div><p>Shipping and taxes are calculated at checkout.</p><button class="button primary checkout-button">Secure checkout</button><div class="cart-trust"><small>SECURE CHECKOUT BY STRIPE</small><small>U.S. SHIPPING ONLY</small><small>14-DAY UNOPENED RETURNS</small></div></div>
   </aside>
   <div class="scrim" hidden></div>
 
   <dialog class="product-dialog"><button class="icon-button dialog-close" aria-label="Close product details">×</button><div class="dialog-content"></div></dialog>
   <div class="toast" role="status" aria-live="polite"></div>
   <script src="config.js"></script>
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=4"></script>
 </body>
 </html>
