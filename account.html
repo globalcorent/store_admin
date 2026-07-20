@@ -6,12 +6,12 @@
   <title>My Account | Aromatic Designer Works</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="account.css?v=7">
+  <link rel="stylesheet" href="account.css?v=8">
 </head>
 <body class="customer-account-body">
   <header class="customer-account-nav">
     <a href="index.html"><img src="assets/logo.png" alt="Aromatic Designer Works"></a>
-    <nav aria-label="Account navigation"><a href="index.html#shop">Shop</a><a href="index.html#care">Candle care</a><a href="mailto:adw.com1660@gmail.com">Support</a><button id="account-signout">Sign out</button></nav>
+    <nav aria-label="Account navigation"><a href="index.html#shop">Shop</a><a href="index.html#care">Candle care</a><button class="account-chat-nav" data-chat-open><span></span> Chat</button><button id="account-signout">Sign out</button></nav>
   </header>
   <div class="account-loading" id="account-loading"><span></span><p>Gathering your account…</p></div>
   <main id="account-app" class="customer-account-main" hidden>
@@ -31,12 +31,20 @@
       </section>
       <aside class="customer-account-side">
         <section class="customer-panel profile-panel"><p class="customer-eyebrow">PROFILE</p><h2>Your details</h2><form id="profile-form"><label>Full name<input id="profile-name" maxlength="120" autocomplete="name"></label><label>Email address<input id="profile-email" type="email" readonly></label><button class="customer-secondary" type="submit">Save name</button><p id="profile-message" aria-live="polite"></p></form></section>
-        <section class="customer-panel help-panel"><span>REAL HUMAN SUPPORT</span><h2>Need help with an order?</h2><p>Contact Aromatic Designer Works directly and include your order number.</p><a href="tel:+13474239364">347-423-9364</a><a href="mailto:adw.com1660@gmail.com">adw.com1660@gmail.com</a></section>
+        <section class="customer-panel help-panel"><span>FAST ACCOUNT SUPPORT</span><h2>How can we help?</h2><p>Ask Aroma about an order, shipping, returns, products, or candle care. A real person is always available when needed.</p><button class="help-chat" data-chat-open>Chat with Aroma <b>→</b></button><a href="tel:+13474239364">347-423-9364</a><a href="mailto:adw.com1660@gmail.com">adw.com1660@gmail.com</a></section>
         <section class="account-confidence"><strong>Shop confidently</strong><span>Secure Stripe checkout</span><span>U.S. shipping only</span><span>14-day unopened returns</span></section>
       </aside>
     </div>
   </main>
+  <div class="account-chat-scrim" hidden></div>
+  <aside class="account-chat" aria-hidden="true" aria-label="Aroma account support chat">
+    <header><div class="chat-avatar">A</div><div><span>ACCOUNT SUPPORT</span><h2>Aroma Assistant</h2><p><i></i> Ready to help</p></div><button class="chat-close" type="button" aria-label="Close chat">×</button></header>
+    <div class="chat-messages" id="chat-messages" aria-live="polite"><div class="chat-message assistant"><span>A</span><p>Hi! I can help with your orders, shipping, returns, product questions, and candle care. What can I help you with?</p></div></div>
+    <div class="chat-quick-actions" aria-label="Suggested questions"><button type="button" data-chat-question="Where is my latest order?">Track my order</button><button type="button" data-chat-question="What is the return policy?">Returns</button><button type="button" data-chat-question="How long does shipping take?">Shipping time</button><button type="button" data-chat-question="How do I care for my candle?">Candle care</button></div>
+    <form id="chat-form"><label class="sr-only" for="chat-input">Message Aroma Assistant</label><input id="chat-input" maxlength="600" autocomplete="off" placeholder="Ask about your order or our products…"><button type="submit" aria-label="Send message">➜</button></form>
+    <footer>Automated store help • For personal assistance call <a href="tel:+13474239364">347-423-9364</a></footer>
+  </aside>
   <div class="account-toast" role="status" aria-live="polite"></div>
-  <script src="config.js"></script><script type="module" src="account.js?v=7"></script>
+  <script src="config.js"></script><script type="module" src="account.js?v=8"></script>
 </body>
 </html>

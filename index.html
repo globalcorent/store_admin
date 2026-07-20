@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"OnlineStore","name":"Aromatic Designer Works","url":"https://globalcorent.github.io/store_admin/","description":"Handmade gel candles, wax candles, soaps, and candle accessories from Brooklyn, New York.","email":"adw.com1660@gmail.com","telephone":"+1-347-423-9364","areaServed":"US","paymentAccepted":"Credit Card"}
   </script>
@@ -123,16 +123,32 @@
   <footer><img src="assets/logo.png" alt="Aromatic Designer Works"><p>Handmade gel candles, wax candles, soaps & accessories.</p><div><a href="#shop">Shop</a><a href="shipping-returns.html">Shipping & Returns</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="tel:+13474239364">347-423-9364</a><a href="account.html">Account</a></div><small>© <span id="year"></span> Aromatic Designer Works Inc. All rights reserved.</small></footer>
 
   <aside class="cart-drawer" aria-hidden="true" aria-label="Shopping cart">
-    <div class="cart-head"><div><p class="eyebrow">YOUR BAG</p><h2>Shopping cart</h2></div><button class="icon-button cart-close" aria-label="Close cart">×</button></div>
+    <div class="cart-head"><div><p class="eyebrow">YOUR BAG</p><h2>Shopping bag</h2><span class="cart-head-count">0 items</span></div><button class="icon-button cart-close" aria-label="Close shopping bag">×</button></div>
+    <div class="cart-offer-stack">
+      <section class="cart-offer bundle-offer" aria-label="Candle bundle progress"><div><span>BUILD A CANDLE BUNDLE</span><strong class="bundle-progress">Add 3 candles to save 15%</strong></div><span class="deal-meter"><i></i></span></section>
+      <section class="cart-offer shipping-offer" aria-label="Free shipping progress"><div><span>FREE U.S. SHIPPING</span><strong class="shipping-progress">$75.00 away from free shipping</strong></div><span class="shipping-meter-bar"><i></i></span></section>
+    </div>
     <div class="cart-items"></div>
     <div class="cart-empty"><span>☼</span><h3>Your bag is waiting</h3><p>Add something handmade from the collection.</p><button class="button primary continue-shopping">Start shopping</button></div>
-    <div class="cart-summary"><div><span>Subtotal</span><strong class="cart-subtotal">$0.00</strong></div><div class="shipping-meter"><p class="shipping-progress"></p><span><i></i></span></div><p class="account-order-note"><a href="auth.html">Sign in before checkout</a> to save this purchase to your account.</p><p>Shipping and taxes are calculated at checkout.</p><button class="button primary checkout-button">Secure checkout</button><div class="cart-trust"><small>SECURE CHECKOUT BY STRIPE</small><small>U.S. SHIPPING ONLY</small><small>14-DAY UNOPENED RETURNS</small></div></div>
+    <div class="cart-summary">
+      <div class="cart-totals" aria-label="Bag totals">
+        <div class="cart-total-line"><span>Merchandise</span><strong class="cart-merchandise">$0.00</strong></div>
+        <div class="cart-total-line cart-savings-row"><span>Candle bundle savings</span><strong class="cart-savings">−$0.00</strong></div>
+        <div class="cart-total-line"><span>Standard U.S. shipping</span><strong class="cart-shipping">$7.95</strong></div>
+        <div class="cart-total-line cart-total-row"><span>Estimated total <small>before tax</small></span><strong class="cart-subtotal">$0.00</strong></div>
+      </div>
+      <p class="account-order-note"><a href="auth.html">Sign in before checkout</a> to save this purchase to your account.</p>
+      <div class="cart-delivery"><span>♢</span><p><strong>Handmade, then carefully packed</strong><small>1 business day to prepare • approximately 5–7 business days in transit</small></p></div>
+      <button class="button primary checkout-button"><span>▣</span> Continue to secure checkout</button>
+      <p class="checkout-note">Taxes and final delivery details are confirmed in Stripe checkout.</p>
+      <div class="cart-trust"><small><b>✓</b> STRIPE PROTECTED</small><small><b>⌁</b> HANDMADE IN BROOKLYN</small><small><b>↩</b> 14-DAY UNOPENED RETURNS</small></div>
+    </div>
   </aside>
   <div class="scrim" hidden></div>
 
   <dialog class="product-dialog"><button class="icon-button dialog-close" aria-label="Close product details">×</button><div class="dialog-content"></div></dialog>
   <div class="toast" role="status" aria-live="polite"></div>
   <script src="config.js"></script>
-  <script type="module" src="app.js?v=6"></script>
+  <script type="module" src="app.js?v=7"></script>
 </body>
 </html>
