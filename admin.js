@@ -1,9 +1,11 @@
 import{createClient}from"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 const config=window.STORE_CONFIG||{},supabase=createClient(config.SUPABASE_URL,config.SUPABASE_PUBLISHABLE_KEY),$=selector=>document.querySelector(selector);
-let products=[],orders=[],reviews=[],pendingFile=null,removeImageRequested=false,currentProduct=null,currentOrder=null;
+let products=[],orders=[],reviews=[],galleryDraft=[],removedGallery=[],currentProduct=null,currentOrder=null;
 const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const money=cents=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format((cents||0)/100);
 const fallbackImage=category=>({"gel-candles":"assets/collection-gel-candles.webp","wax-candles":"assets/collection-wax-candles.webp",candles:"assets/collection-wax-candles.webp",soaps:"assets/collection-soaps.webp",accessories:"assets/collection-accessories.webp"}[category]||"assets/collection-wax-candles.webp");
+const productGallery=product=>{const rows=[...(product.product_images||[])].filter(image=>image.image_url).sort((a,b)=>a.sort_order-b.sort_order||new Date(a.created_at||0)-new Date(b.created_at||0));if(rows.length)return rows;if(product.image_url)return[{id:null,image_url:product.image_url,image_path:product.image_path||null,alt_text:product.name||"",sort_order:0}];return[]};
+const primaryImage=product=>productGallery(product)[0]?.image_url||fallbackImage(product.category);
 const categoryLabel=category=>({"gel-candles":"Gel candles","wax-candles":"Wax candles",candles:"Candles",soaps:"Handmade soaps",accessories:"Accessories"}[category]||category);
 const stars=rating=>`<span class="admin-stars">${[1,2,3,4,5].map(value=>value<=rating?"★":"☆").join("")}</span>`;
 
@@ -15,7 +17,7 @@ if(!session)location.replace("auth.html");else{
 
 async function loadDashboard(){
   const[productResult,orderResult,orderCountResult,subscriberResult,reviewResult,salesResult]=await Promise.all([
-    supabase.from("products").select("*").order("sort_order"),
+    supabase.from("products").select("*,product_images(id,image_url,image_path,alt_text,sort_order,created_at)").order("sort_order"),
     supabase.from("orders").select("id,customer_name,customer_email,status,amount_total_cents,currency,shipping,fulfillment_status,tracking_number,tracking_url,shipped_at,delivered_at,created_at,order_items(id,product_name,quantity,unit_price_cents)").order("created_at",{ascending:false}).limit(100),
     supabase.from("orders").select("id",{count:"exact",head:true}),
     supabase.from("newsletter_subscribers").select("id",{count:"exact",head:true}),
@@ -32,12 +34,12 @@ async function loadDashboard(){
 function renderProducts(){
   const query=$("#product-search").value.trim().toLowerCase();
   const visible=products.filter(product=>!query||[product.name,product.category,product.badge,product.scent_notes].some(value=>String(value||"").toLowerCase().includes(query)));
-  $("#products").innerHTML=visible.length?visible.map(product=>`<article class="admin-product-card">
-    <img src="${escapeHtml(product.image_url||fallbackImage(product.category))}" alt="">
+  $("#products").innerHTML=visible.length?visible.map(product=>{const photoCount=productGallery(product).length;return`<article class="admin-product-card">
+    <div class="admin-product-photo"><img src="${escapeHtml(primaryImage(product))}" alt=""><span>${photoCount} photo${photoCount===1?"":"s"}</span></div>
     <div class="admin-product-copy"><span>${escapeHtml(categoryLabel(product.category))}</span><h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.scent_notes||product.description||"No description yet.")}</p></div>
     <div class="admin-product-meta"><b>${money(product.price_cents)}</b><span>${product.inventory==null?"Unlimited stock":`${product.inventory} in stock`}</span><i class="${product.active?"live":"hidden"}">${product.active?"Visible":"Hidden"}</i></div>
     <div class="admin-row-actions"><button class="edit-button" data-id="${product.id}">Edit</button><button class="delete-button" data-id="${product.id}" aria-label="Delete ${escapeHtml(product.name)}">⋮</button></div>
-  </article>`).join(""):'<div class="empty-state"><b>No products found</b><p>Try another search or add a new product.</p></div>';
+  </article>`}).join(""):'<div class="empty-state"><b>No products found</b><p>Try another search or add a new product.</p></div>';
   document.querySelectorAll(".edit-button").forEach(button=>button.onclick=()=>openEditor(products.find(product=>product.id===button.dataset.id)));
   document.querySelectorAll(".delete-button").forEach(button=>button.onclick=()=>deleteProduct(button.dataset.id));
 }
@@ -72,38 +74,50 @@ async function deleteReview(id){
   const{error}=await supabase.from("reviews").delete().eq("id",id);if(error){alert(error.message);return}await loadDashboard();
 }
 
-function setPreview(url){const image=$("#image-preview"),placeholder=$("#image-placeholder");if(url){image.src=url;image.hidden=false;placeholder.hidden=true;$("#remove-image").hidden=false}else{image.removeAttribute("src");image.hidden=true;placeholder.hidden=false;$("#remove-image").hidden=true}}
 function slugify(value){return value.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"")}
-function openEditor(product={}){
-  currentProduct=product;pendingFile=null;removeImageRequested=false;$("#product-form").reset();
-  $("#product-id").value=product.id||"";$("#product-name").value=product.name||"";$("#slug").value=product.slug||"";$("#category").value=product.category==="candles"?"wax-candles":product.category||"wax-candles";$("#price").value=product.price_cents!=null?(product.price_cents/100).toFixed(2):"";$("#inventory").value=product.inventory??"";$("#sort").value=product.sort_order||0;$("#badge").value=product.badge||"";$("#visual").value=product.visual||"✦";$("#color").value=product.color||"#efe4d4";$("#active").value=String(product.active??true);$("#featured").value=String(product.featured??false);$("#description").value=product.description||"";$("#scent-notes").value=product.scent_notes||"";$("#size-label").value=product.size_label||"";$("#burn-time").value=product.burn_time||"";$("#materials").value=product.materials||"";$("#care-instructions").value=product.care_instructions||"";$("#form-title").textContent=product.id?"Edit product":"Add product";$("#notice").textContent="";setPreview(product.image_url||"");$("#editor").showModal();
+function releaseGalleryPreviews(){for(const image of galleryDraft)if(image.preview_url?.startsWith("blob:"))URL.revokeObjectURL(image.preview_url)}
+function moveGallery(from,to){if(to<0||to>=galleryDraft.length)return;const[image]=galleryDraft.splice(from,1);galleryDraft.splice(to,0,image);renderGalleryEditor()}
+function removeGalleryImage(index){const[image]=galleryDraft.splice(index,1);if(!image)return;if(image.preview_url?.startsWith("blob:"))URL.revokeObjectURL(image.preview_url);if(image.id||image.image_path)removedGallery.push(image);renderGalleryEditor()}
+function renderGalleryEditor(){
+  $("#gallery-empty").hidden=galleryDraft.length>0;
+  $("#gallery-grid").innerHTML=galleryDraft.map((image,index)=>`<article class="gallery-card ${index===0?"cover":""}"><div class="gallery-card-image"><img src="${escapeHtml(image.preview_url||image.image_url)}" alt=""><span>${index===0?"Cover":`View ${index+1}`}</span></div><div class="gallery-card-actions">${index?`<button type="button" data-gallery-cover="${index}">Make cover</button>`:'<b>Store cover</b>'}<span><button type="button" data-gallery-left="${index}" ${index===0?"disabled":""} aria-label="Move photo left">←</button><button type="button" data-gallery-right="${index}" ${index===galleryDraft.length-1?"disabled":""} aria-label="Move photo right">→</button><button type="button" data-gallery-remove="${index}" aria-label="Remove photo">×</button></span></div></article>`).join("");
+  document.querySelectorAll("[data-gallery-cover]").forEach(button=>button.onclick=()=>moveGallery(Number(button.dataset.galleryCover),0));
+  document.querySelectorAll("[data-gallery-left]").forEach(button=>button.onclick=()=>moveGallery(Number(button.dataset.galleryLeft),Number(button.dataset.galleryLeft)-1));
+  document.querySelectorAll("[data-gallery-right]").forEach(button=>button.onclick=()=>moveGallery(Number(button.dataset.galleryRight),Number(button.dataset.galleryRight)+1));
+  document.querySelectorAll("[data-gallery-remove]").forEach(button=>button.onclick=()=>removeGalleryImage(Number(button.dataset.galleryRemove)));
 }
-async function uploadImage(file){
-  const extension=file.name.split(".").pop().toLowerCase(),path=`${crypto.randomUUID()}.${extension}`;
-  const{error}=await supabase.storage.from("product-images").upload(path,file,{cacheControl:"3600",contentType:file.type,upsert:false});if(error)throw error;
+function openEditor(product={}){
+  releaseGalleryPreviews();currentProduct=product;removedGallery=[];galleryDraft=productGallery(product).map(image=>({...image,preview_url:image.image_url,file:null}));$("#product-form").reset();
+  $("#product-id").value=product.id||"";$("#product-name").value=product.name||"";$("#slug").value=product.slug||"";$("#category").value=product.category==="candles"?"wax-candles":product.category||"wax-candles";$("#price").value=product.price_cents!=null?(product.price_cents/100).toFixed(2):"";$("#inventory").value=product.inventory??"";$("#sort").value=product.sort_order||0;$("#badge").value=product.badge||"";$("#visual").value=product.visual||"✦";$("#color").value=product.color||"#efe4d4";$("#active").value=String(product.active??true);$("#featured").value=String(product.featured??false);$("#description").value=product.description||"";$("#scent-notes").value=product.scent_notes||"";$("#size-label").value=product.size_label||"";$("#burn-time").value=product.burn_time||"";$("#materials").value=product.materials||"";$("#care-instructions").value=product.care_instructions||"";$("#form-title").textContent=product.id?"Edit product":"Add product";$("#notice").textContent="";renderGalleryEditor();$("#editor").showModal();
+}
+async function uploadImage(file,productId){
+  const extension=file.name.split(".").pop().toLowerCase(),path=`${productId}/${crypto.randomUUID()}.${extension}`;
+  const{error}=await supabase.storage.from("product-images").upload(path,file,{cacheControl:"31536000",contentType:file.type,upsert:false});if(error)throw error;
   const{data}=supabase.storage.from("product-images").getPublicUrl(path);return{image_url:data.publicUrl,image_path:path};
 }
 async function deleteProduct(id){
   const product=products.find(item=>item.id===id);if(!product||!confirm(`Delete "${product.name}"? Its customer reviews will also be removed. This cannot be undone.`))return;
-  const{error}=await supabase.from("products").delete().eq("id",id);if(error){alert(error.message);return}if(product.image_path)await supabase.storage.from("product-images").remove([product.image_path]);await loadDashboard();
+  const paths=[...new Set(productGallery(product).map(image=>image.image_path).filter(Boolean))];const{error}=await supabase.from("products").delete().eq("id",id);if(error){alert(error.message);return}if(paths.length)await supabase.storage.from("product-images").remove(paths);await loadDashboard();
 }
 
 $("#product-form").onsubmit=async event=>{
-  event.preventDefault();const save=$("#save-product");save.disabled=true;save.textContent="Saving…";$("#notice").textContent="";let uploaded=null;
+  event.preventDefault();const save=$("#save-product");save.disabled=true;save.textContent="Saving product & photos…";$("#notice").textContent="";const uploadedPaths=[];let galleryWriteStarted=false;
   try{
-    if(pendingFile)uploaded=await uploadImage(pendingFile);
     const id=$("#product-id").value,row={name:$("#product-name").value.trim(),slug:slugify($("#slug").value),category:$("#category").value,price_cents:Math.round(Number($("#price").value)*100),inventory:$("#inventory").value===""?null:Number($("#inventory").value),sort_order:Number($("#sort").value),badge:$("#badge").value.trim(),visual:$("#visual").value.trim()||"✦",color:$("#color").value,active:$("#active").value==="true",featured:$("#featured").value==="true",description:$("#description").value.trim(),scent_notes:$("#scent-notes").value.trim(),size_label:$("#size-label").value.trim(),burn_time:$("#burn-time").value.trim(),materials:$("#materials").value.trim(),care_instructions:$("#care-instructions").value.trim()};
-    if(uploaded)Object.assign(row,uploaded);else if(removeImageRequested)Object.assign(row,{image_url:null,image_path:null});
-    const{error}=id?await supabase.from("products").update(row).eq("id",id):await supabase.from("products").insert(row);if(error)throw error;
-    if((uploaded||removeImageRequested)&&currentProduct?.image_path)await supabase.storage.from("product-images").remove([currentProduct.image_path]);
-    $("#editor").close();await loadDashboard();
-  }catch(error){if(uploaded?.image_path)await supabase.storage.from("product-images").remove([uploaded.image_path]);$("#notice").textContent=error.message||"Could not save the product."}finally{save.disabled=false;save.textContent="Save product"}
+    const result=id?await supabase.from("products").update(row).eq("id",id).select("id").single():await supabase.from("products").insert(row).select("id").single();if(result.error)throw result.error;const productId=result.data.id;
+    for(const image of galleryDraft){if(!image.file||image.image_path)continue;const uploaded=await uploadImage(image.file,productId);uploadedPaths.push(uploaded.image_path);Object.assign(image,uploaded)}
+    const productName=row.name,existingRows=galleryDraft.filter(image=>image.id).map((image,index)=>({id:image.id,product_id:productId,image_url:image.image_url,image_path:image.image_path||null,alt_text:`${productName}${index?` — view ${index+1}`:""}`,sort_order:index})),newRows=galleryDraft.filter(image=>!image.id).map((image,index)=>({product_id:productId,image_url:image.image_url,image_path:image.image_path||null,alt_text:`${productName}${index?` — view ${index+1}`:""}`,sort_order:index}));
+    galleryWriteStarted=true;if(existingRows.length){const{error}=await supabase.from("product_images").upsert(existingRows);if(error)throw error}if(newRows.length){const{data,error}=await supabase.from("product_images").insert(newRows).select("id,image_path,image_url");if(error)throw error;for(const saved of data||[]){const image=galleryDraft.find(entry=>!entry.id&&((saved.image_path&&entry.image_path===saved.image_path)||entry.image_url===saved.image_url));if(image)image.id=saved.id}}
+    const removedIds=removedGallery.map(image=>image.id).filter(Boolean);if(removedIds.length){const{error}=await supabase.from("product_images").delete().eq("product_id",productId).in("id",removedIds);if(error)throw error}
+    const cover=galleryDraft[0]||null;const{error:coverError}=await supabase.from("products").update({image_url:cover?.image_url||null,image_path:cover?.image_path||null}).eq("id",productId);if(coverError)throw coverError;
+    const removedPaths=[...new Set(removedGallery.map(image=>image.image_path).filter(Boolean))];if(removedPaths.length)await supabase.storage.from("product-images").remove(removedPaths);releaseGalleryPreviews();galleryDraft=[];removedGallery=[];$("#editor").close();await loadDashboard();
+  }catch(error){if(!galleryWriteStarted&&uploadedPaths.length){await supabase.storage.from("product-images").remove(uploadedPaths);for(const image of galleryDraft)if(uploadedPaths.includes(image.image_path)){image.image_url=null;image.image_path=null}}$("#notice").textContent=error.message||"Could not save the product and photos."}finally{save.disabled=false;save.textContent="Save product"}
 };
 
-$("#image-file").onchange=event=>{const file=event.target.files[0];if(!file)return;if(file.size>5242880){$("#notice").textContent="Please choose an image smaller than 5 MB.";event.target.value="";return}pendingFile=file;removeImageRequested=false;setPreview(URL.createObjectURL(file))};
-$("#remove-image").onclick=()=>{pendingFile=null;removeImageRequested=true;$("#image-file").value="";setPreview("")};
+$("#image-file").onchange=event=>{const files=[...event.target.files];$("#notice").textContent="";if(!files.length)return;const available=Math.max(0,8-galleryDraft.length);if(!available){$("#notice").textContent="A product can have up to 8 photos.";event.target.value="";return}for(const file of files.slice(0,available)){if(file.size>5242880){$("#notice").textContent=`${file.name} is larger than 5 MB and was not added.`;continue}if(!["image/jpeg","image/png","image/webp"].includes(file.type)){$("#notice").textContent=`${file.name} is not a supported image type.`;continue}galleryDraft.push({id:null,image_url:null,image_path:null,preview_url:URL.createObjectURL(file),file})}if(files.length>available)$("#notice").textContent=`Only ${available} more photo${available===1?"":"s"} could be added (8 maximum).`;event.target.value="";renderGalleryEditor()};
 $("#product-name").oninput=()=>{if(!$("#product-id").value)$("#slug").value=slugify($("#product-name").value)};
-$("#product-search").oninput=renderProducts;$("#add").onclick=()=>openEditor();$("#add-secondary").onclick=()=>openEditor();$("#cancel").onclick=()=>$("#editor").close();$("#dialog-x").onclick=()=>$("#editor").close();
+function closeProductEditor(){releaseGalleryPreviews();galleryDraft=[];removedGallery=[];$("#editor").close()}
+$("#product-search").oninput=renderProducts;$("#add").onclick=()=>openEditor();$("#add-secondary").onclick=()=>openEditor();$("#cancel").onclick=closeProductEditor;$("#dialog-x").onclick=closeProductEditor;
 $("#order-form").onsubmit=async event=>{
   event.preventDefault();if(!currentOrder)return;const save=$("#save-order"),status=$("#fulfillment-status").value,now=new Date().toISOString();save.disabled=true;save.textContent="Saving…";$("#order-notice").textContent="";
   const row={fulfillment_status:status,tracking_number:$("#tracking-number").value.trim()||null,tracking_url:$("#tracking-url").value.trim()||null,shipped_at:currentOrder.shipped_at,delivered_at:currentOrder.delivered_at};
