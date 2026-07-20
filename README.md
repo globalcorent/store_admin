@@ -52,6 +52,7 @@ Before launch, add a sharp actual photo, verified size, materials or ingredients
 - The protected customer dashboard is at `account.html`. It shows order history, fulfillment progress, tracking links, saved profile name, support shortcuts, and a buy-again action for available products.
 - The account dashboard includes the Aroma Assistant chat panel for immediate guided answers about linked orders, shipping, returns, products, and candle care, with direct phone and email handoff.
 - The shopping cart shows candle-bundle progress, free-shipping progress, discount savings, estimated shipping, the pre-tax total, inventory-aware quantities, delivery expectations, and smart add-on recommendations before Stripe checkout.
+- Three or more gel or wax candles activate the same 15% unit-price calculation in the browser and Stripe checkout, with original prices, savings, and the applied discount shown clearly in the cart.
 - On phones, the cart uses a spacious full-page scroll with stacked offers, simplified product rows, separated totals, and readable trust information.
 - Each product supports an ordered gallery of up to 8 photos. Administrators can upload several images at once, choose the cover, reorder views, and remove photos from the protected product editor.
 - Storefront, cart, account, chat, policy, and admin text use a readability floor designed to remain comfortable on desktop and mobile screens.

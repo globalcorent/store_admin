@@ -8,7 +8,7 @@ const cors = {
 };
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!);
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-const isCandle = (category: string) => category === "gel-candles" || category === "wax-candles";
+const isCandle = (category: string) => ["gel-candles", "wax-candles", "candles"].includes(category);
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
