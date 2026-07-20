@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"OnlineStore","name":"Aromatic Designer Works","url":"https://globalcorent.github.io/store_admin/","description":"Handmade gel candles, wax candles, soaps, and candle accessories from Brooklyn, New York.","email":"adw.com1660@gmail.com","telephone":"+1-347-423-9364","areaServed":"US","paymentAccepted":"Credit Card"}
   </script>
@@ -134,7 +134,10 @@
       <section class="cart-offer bundle-offer" aria-label="Candle bundle progress"><div><span>BUILD A CANDLE BUNDLE</span><strong class="bundle-progress">Add 3 candles to save 15%</strong></div><span class="deal-meter"><i></i></span></section>
       <section class="cart-offer shipping-offer" aria-label="Free shipping progress"><div><span>FREE U.S. SHIPPING</span><strong class="shipping-progress">$75.00 away from free shipping</strong></div><span class="shipping-meter-bar"><i></i></span></section>
     </div>
-    <div class="cart-items"></div>
+    <section class="cart-products" hidden>
+      <div class="cart-products-heading"><span>YOUR ITEMS</span><strong>Change quantity or remove an item</strong></div>
+      <div class="cart-items"></div>
+    </section>
     <section class="cart-recommendations" hidden><div><span>COMPLETE THE RITUAL</span><strong>A little something extra</strong></div><div class="cart-recommendation-grid"></div></section>
     <div class="cart-empty"><span>☼</span><h3>Build your perfect ritual</h3><p>Choose a handmade candle, artisan soap, or care essential to begin.</p><button class="button primary continue-shopping">Explore the collection</button></div>
     <div class="cart-summary">
@@ -158,6 +161,6 @@
   <dialog class="product-dialog"><button class="icon-button dialog-close" aria-label="Close product details">×</button><div class="dialog-content"></div></dialog>
   <div class="toast" role="status" aria-live="polite"></div>
   <script src="config.js"></script>
-  <script type="module" src="app.js?v=10"></script>
+  <script type="module" src="app.js?v=11"></script>
 </body>
 </html>
