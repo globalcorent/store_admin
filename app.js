@@ -13,7 +13,7 @@ const fallbackProducts=[
   {id:"a3",name:"Signature Gift Set",slug:"signature-gift-set",category:"accessories",description:"A ready-to-give candle, soap and care accessory bundle.",scent_notes:"",size_label:"",burn_time:"",materials:"",care_instructions:"",price_cents:4900,badge:"Gift Ready",visual:"🎁",color:"#eab7a1",image_url:null,inventory:null,active:true}
 ];
 
-let products=fallbackProducts,reviews=[];
+let products=fallbackProducts,reviews=[],currentUser=null;
 let cart=JSON.parse(localStorage.getItem("adw-cart")||"[]");
 let supabase=null;
 const el=selector=>document.querySelector(selector);
@@ -33,6 +33,7 @@ async function loadStore(){
     try{
       const{createClient}=await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
       supabase=createClient(config.SUPABASE_URL,config.SUPABASE_PUBLISHABLE_KEY);
+      const sessionResult=await supabase.auth.getSession();currentUser=sessionResult.data.session?.user||null;
       const productResult=await supabase.from("products").select("id,name,slug,category,description,scent_notes,size_label,burn_time,materials,care_instructions,featured,price_cents,badge,visual,color,image_url,active,inventory").eq("active",true).order("sort_order");
       if(productResult.error)throw productResult.error;
       if(productResult.data?.length)products=productResult.data;
@@ -41,8 +42,11 @@ async function loadStore(){
       cart=cart.filter(item=>products.some(product=>product.id===item.id));persistCart();
     }catch(error){console.warn("Using sample catalog:",error.message);showToast("We’re refreshing the live catalog. Please try again shortly.")}
   }
-  el(".loading").hidden=true;renderProducts("all");renderCart();
+  el(".loading").hidden=true;renderProducts("all");renderCart();renderAccountOrderNote();
+  if(localStorage.getItem("adw-open-cart")==="1"){localStorage.removeItem("adw-open-cart");openCart();showToast("Available favorites were added from your order.")}
 }
+
+function renderAccountOrderNote(){const note=el(".account-order-note");if(!note)return;note.innerHTML=currentUser?'✓ This purchase will be saved to <a href="account.html">your account</a>.':'<a href="auth.html">Sign in before checkout</a> to save this purchase to your account.'}
 
 function renderProducts(category){
   const list=category==="all"?products:products.filter(product=>product.category===category);

@@ -4,7 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Store Admin | Aromatic Designer Works</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="account.css?v=4">
+  <link rel="stylesheet" href="account.css?v=6">
 </head>
 <body class="admin-body">
   <aside class="admin-sidebar">
@@ -27,7 +27,7 @@
       <div id="products" class="admin-product-list"></div>
     </section>
     <section id="orders-panel" class="admin-panel">
-      <div class="panel-heading"><div><p class="admin-eyebrow">SALES</p><h2>Recent orders</h2><p>Paid Stripe orders appear here after confirmation.</p></div></div>
+      <div class="panel-heading"><div><p class="admin-eyebrow">SALES & FULFILLMENT</p><h2>Recent orders</h2><p>Open an order to mark it preparing, shipped, or delivered and add tracking information.</p></div></div>
       <div id="orders"></div>
     </section>
     <section id="reviews-panel" class="admin-panel">
@@ -64,6 +64,21 @@
       <div class="form-actions"><button type="button" class="admin-secondary" id="cancel">Cancel</button><button id="save-product" class="admin-primary">Save product</button></div>
     </form>
   </dialog>
-  <script src="config.js"></script><script type="module" src="admin.js?v=4"></script>
+  <dialog id="order-editor" class="admin-dialog order-dialog">
+    <form id="order-form" class="product-form">
+      <div class="dialog-heading"><div><p class="admin-eyebrow">ORDER FULFILLMENT</p><h2 id="order-form-title">Manage order</h2></div><button type="button" class="dialog-x" id="order-dialog-x" aria-label="Close">×</button></div>
+      <input id="order-id" type="hidden">
+      <div id="order-overview" class="order-overview"></div>
+      <div id="order-items-detail" class="order-items-detail"></div>
+      <div class="form-grid order-fulfillment-fields">
+        <label>Fulfillment status<select id="fulfillment-status"><option value="unfulfilled">Order received</option><option value="processing">Preparing order</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option><option value="refunded">Refunded</option></select></label>
+        <label>Tracking number<input id="tracking-number" maxlength="120"></label>
+        <label class="form-full">Tracking link <small>Optional carrier URL</small><input id="tracking-url" type="url" placeholder="https://..."></label>
+      </div>
+      <p id="order-notice" class="form-notice" aria-live="polite"></p>
+      <div class="form-actions"><button type="button" class="admin-secondary" id="order-cancel">Cancel</button><button id="save-order" class="admin-primary">Save fulfillment</button></div>
+    </form>
+  </dialog>
+  <script src="config.js"></script><script type="module" src="admin.js?v=6"></script>
 </body>
 </html>

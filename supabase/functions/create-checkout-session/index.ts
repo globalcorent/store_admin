@@ -14,6 +14,10 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return Response.json({ error: "Method not allowed" }, { status: 405, headers: cors });
   try {
+    const authorization = req.headers.get("Authorization");
+    const token = authorization?.startsWith("Bearer ") ? authorization.slice(7) : null;
+    const { data: authData } = token ? await db.auth.getUser(token) : { data: { user: null } };
+    const accountUser = authData.user;
     const { items } = await req.json();
     if (!Array.isArray(items) || !items.length) throw new Error("Cart is empty");
 
@@ -43,7 +47,11 @@ Deno.serve(async (req) => {
         price_data: {
           currency: "usd",
           unit_amount: bundle ? Math.round(product.price_cents * 0.85) : product.price_cents,
-          product_data: { name: bundle ? `${product.name} — 15% bundle deal` : product.name, description: product.description }
+          product_data: {
+            name: bundle ? `${product.name} — 15% bundle deal` : product.name,
+            description: product.description,
+            metadata: { product_id: product.id }
+          }
         }
       };
     });
@@ -52,6 +60,9 @@ Deno.serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items,
+      client_reference_id: accountUser?.id,
+      customer_email: accountUser?.email,
+      metadata: accountUser ? { user_id: accountUser.id } : {},
       success_url: "https://rfauhbcnrmwqyowftlcq.supabase.co/functions/v1/confirm-order?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "https://globalcorent.github.io/store_admin/",
       shipping_address_collection: { allowed_countries: ["US"] },

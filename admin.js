@@ -1,6 +1,6 @@
 import{createClient}from"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 const config=window.STORE_CONFIG||{},supabase=createClient(config.SUPABASE_URL,config.SUPABASE_PUBLISHABLE_KEY),$=selector=>document.querySelector(selector);
-let products=[],orders=[],reviews=[],pendingFile=null,removeImageRequested=false,currentProduct=null;
+let products=[],orders=[],reviews=[],pendingFile=null,removeImageRequested=false,currentProduct=null,currentOrder=null;
 const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const money=cents=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format((cents||0)/100);
 const fallbackImage=category=>({"gel-candles":"assets/collection-gel-candles.webp","wax-candles":"assets/collection-wax-candles.webp",candles:"assets/collection-wax-candles.webp",soaps:"assets/collection-soaps.webp",accessories:"assets/collection-accessories.webp"}[category]||"assets/collection-wax-candles.webp");
@@ -16,7 +16,7 @@ if(!session)location.replace("auth.html");else{
 async function loadDashboard(){
   const[productResult,orderResult,orderCountResult,subscriberResult,reviewResult,salesResult]=await Promise.all([
     supabase.from("products").select("*").order("sort_order"),
-    supabase.from("orders").select("id,customer_name,customer_email,status,amount_total_cents,currency,created_at").order("created_at",{ascending:false}).limit(100),
+    supabase.from("orders").select("id,customer_name,customer_email,status,amount_total_cents,currency,shipping,fulfillment_status,tracking_number,tracking_url,shipped_at,delivered_at,created_at,order_items(id,product_name,quantity,unit_price_cents)").order("created_at",{ascending:false}).limit(100),
     supabase.from("orders").select("id",{count:"exact",head:true}),
     supabase.from("newsletter_subscribers").select("id",{count:"exact",head:true}),
     supabase.from("reviews").select("id,product_id,author_name,rating,title,body,approved,verified_purchase,created_at").order("created_at",{ascending:false}),
@@ -43,7 +43,18 @@ function renderProducts(){
 }
 
 function renderOrders(){
-  $("#orders").innerHTML=orders.length?`<div class="admin-table-wrap"><table><thead><tr><th>Date</th><th>Customer</th><th>Email</th><th>Status</th><th>Total</th></tr></thead><tbody>${orders.slice(0,25).map(order=>`<tr><td>${new Date(order.created_at).toLocaleDateString()}</td><td>${escapeHtml(order.customer_name||"Guest")}</td><td>${escapeHtml(order.customer_email||"—")}</td><td><span class="order-status">${escapeHtml(order.status)}</span></td><td><strong>${money(order.amount_total_cents)}</strong></td></tr>`).join("")}</tbody></table></div>`:'<div class="empty-state"><b>No orders yet</b><p>Paid Stripe orders will appear here automatically.</p></div>';
+  $("#orders").innerHTML=orders.length?`<div class="admin-table-wrap"><table><thead><tr><th>Date</th><th>Customer</th><th>Payment</th><th>Fulfillment</th><th>Total</th><th></th></tr></thead><tbody>${orders.slice(0,25).map(order=>`<tr><td>${new Date(order.created_at).toLocaleDateString()}</td><td><strong>${escapeHtml(order.customer_name||"Guest")}</strong><small class="table-subline">${escapeHtml(order.customer_email||"—")}</small></td><td><span class="order-status payment">${escapeHtml(order.status)}</span></td><td><span class="order-status fulfillment ${escapeHtml(order.fulfillment_status)}">${escapeHtml(fulfillmentLabel(order.fulfillment_status))}</span></td><td><strong>${money(order.amount_total_cents)}</strong></td><td><button class="manage-order" data-order-id="${order.id}">Manage</button></td></tr>`).join("")}</tbody></table></div>`:'<div class="empty-state"><b>No orders yet</b><p>Paid Stripe orders will appear here automatically.</p></div>';
+  document.querySelectorAll("[data-order-id]").forEach(button=>button.onclick=()=>openOrderEditor(button.dataset.orderId));
+}
+
+function fulfillmentLabel(status){return({unfulfilled:"Order received",processing:"Preparing",shipped:"Shipped",delivered:"Delivered",cancelled:"Cancelled",refunded:"Refunded"}[status]||"Order received")}
+function adminOrderNumber(order){return`ADW-${order.id.replaceAll("-","").slice(0,8).toUpperCase()}`}
+function shippingAddress(shipping){const data=shipping||{},address=data.address||{},city=[address.city,address.state,address.postal_code].filter(Boolean).join(", ");return[data.name,address.line1,address.line2,city,address.country].filter(Boolean).map(escapeHtml).join("<br>")||"No shipping address stored."}
+function openOrderEditor(id){
+  const order=orders.find(item=>item.id===id);if(!order)return;currentOrder=order;$("#order-id").value=order.id;$("#order-form-title").textContent=adminOrderNumber(order);$("#fulfillment-status").value=order.fulfillment_status||"unfulfilled";$("#tracking-number").value=order.tracking_number||"";$("#tracking-url").value=order.tracking_url||"";$("#order-notice").textContent="";
+  $("#order-overview").innerHTML=`<article><small>Customer</small><strong>${escapeHtml(order.customer_name||"Guest")}</strong><span>${escapeHtml(order.customer_email||"—")}</span></article><article><small>Order total</small><strong>${money(order.amount_total_cents)}</strong><span>${new Date(order.created_at).toLocaleString()}</span></article><article><small>Ship to</small><p>${shippingAddress(order.shipping)}</p></article>`;
+  $("#order-items-detail").innerHTML=`<h3>Items</h3>${(order.order_items||[]).map(item=>`<div><span>${item.quantity} × ${escapeHtml(item.product_name)}</span><strong>${money(item.unit_price_cents*item.quantity)}</strong></div>`).join("")}`;
+  $("#order-editor").showModal();
 }
 
 function renderReviews(){
@@ -93,4 +104,13 @@ $("#image-file").onchange=event=>{const file=event.target.files[0];if(!file)retu
 $("#remove-image").onclick=()=>{pendingFile=null;removeImageRequested=true;$("#image-file").value="";setPreview("")};
 $("#product-name").oninput=()=>{if(!$("#product-id").value)$("#slug").value=slugify($("#product-name").value)};
 $("#product-search").oninput=renderProducts;$("#add").onclick=()=>openEditor();$("#add-secondary").onclick=()=>openEditor();$("#cancel").onclick=()=>$("#editor").close();$("#dialog-x").onclick=()=>$("#editor").close();
+$("#order-form").onsubmit=async event=>{
+  event.preventDefault();if(!currentOrder)return;const save=$("#save-order"),status=$("#fulfillment-status").value,now=new Date().toISOString();save.disabled=true;save.textContent="Saving…";$("#order-notice").textContent="";
+  const row={fulfillment_status:status,tracking_number:$("#tracking-number").value.trim()||null,tracking_url:$("#tracking-url").value.trim()||null,shipped_at:currentOrder.shipped_at,delivered_at:currentOrder.delivered_at};
+  if(["shipped","delivered"].includes(status)&&!row.shipped_at)row.shipped_at=now;if(status==="delivered"&&!row.delivered_at)row.delivered_at=now;
+  const{error}=await supabase.from("orders").update(row).eq("id",currentOrder.id);
+  if(error){$("#order-notice").textContent=error.message;save.disabled=false;save.textContent="Save fulfillment";return}
+  $("#order-editor").close();save.disabled=false;save.textContent="Save fulfillment";await loadDashboard();
+};
+$("#order-cancel").onclick=()=>$("#order-editor").close();$("#order-dialog-x").onclick=()=>$("#order-editor").close();
 $("#signout").onclick=async()=>{await supabase.auth.signOut();location.replace("auth.html")};

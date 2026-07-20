@@ -20,7 +20,7 @@ function setMode(next) {
 
 async function routeUser(user) {
   const { data } = await supabase.from("profiles").select("role").eq("id", user.id).single();
-  location.replace(data?.role === "admin" ? "admin.html" : "index.html");
+  location.replace(data?.role === "admin" ? "admin.html" : "account.html");
 }
 
 document.querySelector("#signin-tab").onclick = () => setMode("signin");

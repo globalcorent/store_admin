@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="View your Aromatic Designer Works orders and account details.">
+  <title>My Account | Aromatic Designer Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="account.css?v=6">
+</head>
+<body class="customer-account-body">
+  <header class="customer-account-nav">
+    <a href="index.html"><img src="assets/logo.png" alt="Aromatic Designer Works"></a>
+    <nav aria-label="Account navigation"><a href="index.html#shop">Shop</a><a href="index.html#care">Candle care</a><a href="mailto:adw.com1660@gmail.com">Support</a><button id="account-signout">Sign out</button></nav>
+  </header>
+  <div class="account-loading" id="account-loading"><span></span><p>Gathering your account…</p></div>
+  <main id="account-app" class="customer-account-main" hidden>
+    <section class="customer-welcome">
+      <div><p class="customer-eyebrow">MY AROMATIC DESIGNER WORKS</p><h1>Welcome back, <span id="customer-first-name">friend</span>.</h1><p>Your orders, delivery progress, and favorite handmade finds are all in one place.</p></div>
+      <a class="customer-primary" href="index.html#shop">Shop new arrivals</a>
+    </section>
+    <section class="customer-stats" aria-label="Account summary">
+      <article><small>Orders</small><strong id="customer-order-count">0</strong><span>Placed with this account</span></article>
+      <article><small>Order value</small><strong id="customer-total-spent">$0.00</strong><span>Across recorded purchases</span></article>
+      <article><small>Latest order</small><strong id="customer-latest-order">—</strong><span id="customer-latest-status">Ready when you are</span></article>
+    </section>
+    <div class="customer-account-layout">
+      <section class="customer-panel order-history-panel">
+        <div class="customer-panel-heading"><div><p class="customer-eyebrow">PURCHASE HISTORY</p><h2>Your orders</h2></div><a href="shipping-returns.html">Shipping & return policy</a></div>
+        <div id="customer-orders"></div>
+      </section>
+      <aside class="customer-account-side">
+        <section class="customer-panel profile-panel"><p class="customer-eyebrow">PROFILE</p><h2>Your details</h2><form id="profile-form"><label>Full name<input id="profile-name" maxlength="120" autocomplete="name"></label><label>Email address<input id="profile-email" type="email" readonly></label><button class="customer-secondary" type="submit">Save name</button><p id="profile-message" aria-live="polite"></p></form></section>
+        <section class="customer-panel help-panel"><span>REAL HUMAN SUPPORT</span><h2>Need help with an order?</h2><p>Contact Aromatic Designer Works directly and include your order number.</p><a href="tel:+13474239364">347-423-9364</a><a href="mailto:adw.com1660@gmail.com">adw.com1660@gmail.com</a></section>
+        <section class="account-confidence"><strong>Shop confidently</strong><span>Secure Stripe checkout</span><span>U.S. shipping only</span><span>14-day unopened returns</span></section>
+      </aside>
+    </div>
+  </main>
+  <div class="account-toast" role="status" aria-live="polite"></div>
+  <script src="config.js"></script><script type="module" src="account.js?v=6"></script>
+</body>
+</html>

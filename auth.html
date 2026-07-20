@@ -2,24 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Account | Aromatic Designer Works</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="account.css?v=4">
+  <meta name="description" content="Sign in to view Aromatic Designer Works orders and account details.">
+  <title>Sign In | Aromatic Designer Works</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="account.css?v=6">
 </head>
 <body class="account-page">
-  <main class="account-card">
-    <a href="index.html"><img class="account-logo" src="assets/logo.png" alt="Aromatic Designer Works"></a>
-    <p class="account-kicker">WELCOME TO ADW</p><h1>Your account</h1>
-    <p>Sign in to view your account or securely manage the store.</p>
-    <div class="auth-tabs"><button id="signin-tab" class="active">Sign in</button><button id="signup-tab">Create account</button></div>
-    <form id="auth-form">
-      <div id="name-wrap" hidden><label for="name">Full name</label><input id="name" autocomplete="name"></div>
-      <label for="email">Email address</label><input id="email" type="email" autocomplete="email" required>
-      <label for="password">Password</label><input id="password" type="password" minlength="8" autocomplete="current-password" required>
-      <button class="account-primary" type="submit">Sign in</button>
-    </form>
-    <p class="account-message" id="message" aria-live="polite"></p>
-    <a class="account-back" href="index.html">← Back to the store</a>
+  <main class="auth-shell">
+    <aside class="auth-benefits">
+      <a href="index.html"><img src="assets/logo.png" alt="Aromatic Designer Works"></a>
+      <div><p>YOUR ADW ACCOUNT</p><h1>Keep every handmade favorite close.</h1><span>Sign in before checkout and your purchase will be saved automatically.</span></div>
+      <ul><li><b>01</b><span><strong>Follow your order</strong>See when it is received, prepared, shipped, and delivered.</span></li><li><b>02</b><span><strong>Buy it again</strong>Put available favorites from a past order back in your bag.</span></li><li><b>03</b><span><strong>Get faster help</strong>Find your order number and contact the store directly.</span></li></ul>
+      <small>Secure authentication provided by Supabase.</small>
+    </aside>
+    <section class="account-card auth-card">
+      <a href="index.html"><img class="account-logo" src="assets/logo.png" alt="Aromatic Designer Works"></a>
+      <p class="account-kicker">WELCOME BACK</p><h2>Your account</h2>
+      <p>Sign in to see your purchases, delivery progress, and profile.</p>
+      <div class="auth-tabs"><button id="signin-tab" class="active">Sign in</button><button id="signup-tab">Create account</button></div>
+      <form id="auth-form">
+        <div id="name-wrap" hidden><label for="name">Full name</label><input id="name" autocomplete="name" maxlength="120"></div>
+        <label for="email">Email address</label><input id="email" type="email" autocomplete="email" required>
+        <label for="password">Password <small>8 characters minimum</small></label><input id="password" type="password" minlength="8" autocomplete="current-password" required>
+        <button class="account-primary" type="submit">Sign in</button>
+      </form>
+      <p class="account-message" id="message" aria-live="polite"></p>
+      <div class="auth-assurance"><span>Protected account</span><span>Private order history</span><span>Secure Stripe payments</span></div>
+      <a class="account-back" href="index.html">← Back to the store</a>
+    </section>
   </main>
-  <script src="config.js"></script><script type="module" src="auth.js"></script>
+  <script src="config.js"></script><script type="module" src="auth.js?v=6"></script>
 </body></html>
