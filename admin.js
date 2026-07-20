@@ -25,12 +25,13 @@ async function loadDashboard(){
     supabase.from("reviews").select("id,product_id,author_name,rating,title,body,approved,verified_purchase,created_at").order("created_at",{ascending:false}),
     supabase.from("orders").select("amount_total_cents").eq("status","paid")
   ]);
-  const failed=[productResult,promotionResult,orderResult,reviewResult,salesResult].find(result=>result.error);if(failed?.error){alert(`Could not load the dashboard: ${failed.error.message}`);return}
-  products=productResult.data||[];promotions=promotionResult.data||[];orders=orderResult.data||[];reviews=reviewResult.data||[];
+  const failed=[productResult,promotionResult,orderResult,reviewResult,salesResult].filter(result=>result.error);if(failed.length)console.error("Some dashboard sections could not load",failed.map(result=>result.error));
+  products=productResult.error?[]:productResult.data||[];promotions=promotionResult.error?[]:promotionResult.data||[];orders=orderResult.error?[]:orderResult.data||[];reviews=reviewResult.error?[]:reviewResult.data||[];
   $("#product-count").textContent=products.length;$("#order-count").textContent=orderCountResult.count||0;$("#subscriber-count").textContent=subscriberResult.count||0;$("#review-count").textContent=reviews.filter(review=>!review.approved).length;
   $("#sales-total").textContent=money((salesResult.data||[]).reduce((sum,order)=>sum+order.amount_total_cents,0));
-  $("#promotion-count").textContent=promotions.filter(promotionIsLive).length;
+  $("#promotion-count").textContent=promotionResult.error?"!":promotions.filter(promotionIsLive).length;
   renderProducts();renderPromotions();renderOrders();renderReviews();
+  if(promotionResult.error)$("#promotions").innerHTML='<div class="empty-state"><b>Promotions could not load</b><p>Refresh the page. Your products and orders remain available.</p></div>';
 }
 
 function renderProducts(){
@@ -46,10 +47,10 @@ function renderProducts(){
   document.querySelectorAll(".delete-button").forEach(button=>button.onclick=()=>deleteProduct(button.dataset.id));
 }
 
-const promotionScopeLabel=scope=>({all:"Entire cart",candles:"All candles","gel-candles":"Gel candles","wax-candles":"Wax candles",soaps:"Handmade soaps",accessories:"Accessories"}[scope]||scope);
-const promotionIsLive=promotion=>promotion.active&&(!promotion.starts_at||new Date(promotion.starts_at)<=new Date())&&(!promotion.ends_at||new Date(promotion.ends_at)>new Date());
-const promotionValueLabel=promotion=>promotion.discount_type==="percentage"?`${promotion.discount_value}% off`:`${money(promotion.discount_value)} off`;
-const dateInputValue=value=>value?new Date(new Date(value).getTime()-new Date(value).getTimezoneOffset()*60000).toISOString().slice(0,16):"";
+function promotionScopeLabel(scope){return({all:"Entire cart",candles:"All candles","gel-candles":"Gel candles","wax-candles":"Wax candles",soaps:"Handmade soaps",accessories:"Accessories"}[scope]||scope)}
+function promotionIsLive(promotion){return promotion.active&&(!promotion.starts_at||new Date(promotion.starts_at)<=new Date())&&(!promotion.ends_at||new Date(promotion.ends_at)>new Date())}
+function promotionValueLabel(promotion){return promotion.discount_type==="percentage"?`${promotion.discount_value}% off`:`${money(promotion.discount_value)} off`}
+function dateInputValue(value){return value?new Date(new Date(value).getTime()-new Date(value).getTimezoneOffset()*60000).toISOString().slice(0,16):""}
 function promotionRequirement(promotion){const parts=[];if(promotion.min_quantity>1)parts.push(`${promotion.min_quantity}+ qualifying items`);if(promotion.min_subtotal_cents>0)parts.push(`${money(promotion.min_subtotal_cents)} cart minimum`);return parts.join(" • ")||"No additional minimum"}
 function promotionSchedule(promotion){if(promotion.ends_at&&new Date(promotion.ends_at)<=new Date())return"Ended";if(promotion.starts_at&&new Date(promotion.starts_at)>new Date())return`Starts ${new Date(promotion.starts_at).toLocaleDateString()}`;if(promotion.ends_at)return`Ends ${new Date(promotion.ends_at).toLocaleDateString()}`;return"No end date"}
 function renderPromotions(){
