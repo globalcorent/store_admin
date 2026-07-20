@@ -64,3 +64,29 @@ button:disabled{cursor:not-allowed;opacity:.62}
 /* Product galleries and richer cart journey */
 .product-photo-count{position:absolute;z-index:3;right:14px;bottom:64px;padding:6px 8px;border-radius:999px;background:rgba(39,24,20,.78);color:#fff;font-size:7px;font-weight:800;letter-spacing:.04em;backdrop-filter:blur(5px)}.dialog-gallery{min-width:0;background:#f6f0eb}.product-thumbnails{display:grid;grid-auto-flow:column;grid-auto-columns:76px;gap:9px;overflow:auto;padding:12px;background:#fff;border-top:1px solid var(--line)}.product-thumbnails button{height:76px;padding:3px;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer}.product-thumbnails button.active{border-color:var(--berry);box-shadow:0 0 0 2px rgba(184,45,109,.12)}.product-thumbnails img{width:100%;height:100%;object-fit:cover;border-radius:4px}.cart-head-actions{display:flex;align-items:center;gap:9px}.cart-continue{padding:8px 10px;border:0;border-bottom:1px solid var(--ink);background:none;color:var(--ink);font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;cursor:pointer}.cart-recommendations{padding:12px 28px 14px;border-top:1px solid var(--line);background:#fbf7f3}.cart-recommendations[hidden]{display:none!important}.cart-recommendations>div:first-child{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px}.cart-recommendations>div:first-child span{color:var(--copper);font-size:6px;font-weight:800;letter-spacing:.12em}.cart-recommendations>div:first-child strong{font:600 18px var(--serif)}.cart-recommendation-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cart-recommendation-grid article{display:grid;grid-template-columns:48px 1fr 27px;align-items:center;gap:8px;padding:7px;border:1px solid var(--line);border-radius:8px;background:#fff}.cart-recommendation-grid img{width:48px;height:48px;object-fit:cover;border-radius:6px;background:#eee}.cart-recommendation-grid article div{min-width:0}.cart-recommendation-grid span,.cart-recommendation-grid strong,.cart-recommendation-grid small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cart-recommendation-grid span{color:var(--copper);font-size:5px;font-weight:800;text-transform:uppercase}.cart-recommendation-grid strong{margin:2px 0;font:600 13px var(--serif)}.cart-recommendation-grid small{color:var(--muted);font-size:7px}.cart-recommendation-grid button{width:27px;height:27px;border:0;border-radius:50%;background:var(--ink);color:#fff;font-size:16px;cursor:pointer}
 @media(max-width:650px){.product-photo-count{right:10px;bottom:59px}.product-thumbnails{grid-auto-columns:64px}.product-thumbnails button{height:64px}.cart-button{gap:5px;padding:7px}.cart-button-label{display:none}.cart-icon{width:23px;height:23px}.cart-head-actions{gap:5px}.cart-continue{display:none}.cart-recommendations{padding:10px 18px 12px}.cart-recommendations>div:first-child strong{font-size:16px}.cart-recommendation-grid{grid-template-columns:1fr}.cart-recommendation-grid article:nth-child(2){display:none}}
+
+/* Readability and accessibility pass */
+body{font-size:16px}
+.announcement,.main-nav,.cart-button,.eyebrow,.deal-pill,.button,.text-link{font-size:12px}
+.benefits span,.category-tile small,.category-tile i,.filter,.product-badge,.quick-add,.product-meta,.shop-note,.deal-card span,.deal-card a,.form-message,footer>div,.product-rating,.sold-out-badge,.policy-grid article a,.legal-header a:last-child,.legal-nav a,.legal-footer{font-size:11px}
+.product-desc,.deal-card p,.care p,.policy-grid p,.empty-products p,.trust-grid p,.policy-intro,.faq details p,.newsletter>div:first-child>p:last-child,.cart-empty p,.product-promise,.review p,.no-reviews p,.legal-hero>p:last-child{font-size:13px}
+.legal-content p,.legal-content li{font-size:14px;line-height:1.75}
+.newsletter>div:last-child>small,.shipping-meter p,.dialog-rating,.product-specs dt,.specific-care p,.review small,.verified-review,.review-form>p,.review-form label,.review-message{font-size:11px}
+.product-specs dd{font-size:13px}
+.toast{font-size:12px}
+
+/* Cart text should stay readable even inside the compact drawer. */
+.cart-head-count{font-size:11px}
+.cart-offer div>span,.cart-item-category,.cart-recommendations>div:first-child span{font-size:10px}
+.cart-offer strong,.cart-item p,.qty span,.cart-total-line,.cart-total-line strong,.cart-summary .account-order-note,.cart-delivery strong,.cart-recommendation-grid span,.cart-recommendation-grid small{font-size:11px}
+.cart-item p b,.cart-total-row span small,.cart-delivery small,.checkout-note,.cart-trust small{font-size:10px!important}
+.cart-item-end>strong{font-size:12px}
+.cart-item .remove,.cart-continue{font-size:10px}
+.product-photo-count{font-size:10px}
+
+@media(max-width:650px){
+  .announcement{font-size:10px;line-height:1.5}
+  .cart-offer strong,.cart-item p,.cart-total-line,.cart-total-line strong{font-size:10px}
+  .cart-trust small{font-size:10px!important;line-height:1.3}
+  .cart-delivery small{font-size:10px}
+}

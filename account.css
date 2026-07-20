@@ -50,3 +50,30 @@
 @media(max-width:1100px){.gallery-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:780px){.admin-product-photo{width:64px;height:64px}.gallery-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.admin-product-photo{width:58px;height:58px}.gallery-editor{padding:15px}.gallery-editor-heading{align-items:flex-start;flex-direction:column}.gallery-grid{grid-template-columns:1fr 1fr;gap:8px}.gallery-card-image{height:125px}}
+
+/* Readability and accessibility pass */
+label,.admin-sidebar nav a,.account-back,.customer-account-nav nav a,.customer-account-nav nav button{font-size:12px}
+.account-primary,.admin-primary,.sidebar-signout,.edit-button,.delete-button,.admin-secondary,.upload-button,.text-button,.customer-primary,.customer-secondary,.manage-order,.customer-order-actions button,.customer-order-actions a{font-size:11px}
+.admin-label,.admin-eyebrow,.customer-eyebrow,.review-status-block>span,.help-panel>span,.customer-order-status,.customer-order-meta small,.order-overview small,.table-subline{font-size:10px}
+.admin-sidebar-foot small,.admin-stats small,.admin-product-copy span,.admin-product-meta span,.admin-product-meta i,.moderation-note,.editor-section-title p,.review-status-block small,.admin-review-copy>small,.admin-review-copy b,.review-actions button,.auth-benefits>div>p,.auth-benefits>small,.auth-assurance span,.customer-stats small,.customer-stats span,.customer-panel-heading>a,.profile-panel form p,.account-confidence span,.customer-order-card>summary small,.order-progress span,.customer-order-items span,.account-loading p,.account-toast,.help-chat,.account-chat-nav,.admin-product-photo span,.gallery-card-image>span,.gallery-card-actions>b,.gallery-card-actions>button,.gallery-tip{font-size:10px}
+.admin-stats em,.panel-heading p:last-child,.admin-product-copy p,.empty-state p,.admin-loading p,.image-preview span,.image-editor p,.form-notice,.admin-review-copy p,.auth-benefits li span,.help-panel p,.help-panel a,.order-status-message,.order-exception,.customer-order-items article>strong,.customer-order-meta p,.customer-empty-orders p,.gallery-editor-heading p,.gallery-empty p{font-size:12px}
+th{font-size:11px}td{font-size:12px}
+.auth-benefits>div>span,.customer-welcome>div>p:last-child{font-size:14px}
+.customer-order-card>summary>b,.admin-stars{font-size:13px}
+.order-overview span,.order-overview p,.order-items-detail>div{font-size:12px}
+
+/* Guided chat remains compact, but never tiny. */
+.account-chat header span{font-size:10px}
+.account-chat header p,.chat-typing,.account-chat>footer{font-size:11px}
+.chat-message p,.account-chat form input{font-size:13px}
+.chat-quick-actions button{font-size:10px}
+
+/* Product photo controls need to be easy to scan and tap. */
+.gallery-card-actions>span button{font-size:14px}
+.gallery-card-actions>button{min-height:30px;padding:5px}
+
+@media(max-width:650px){
+  .customer-account-nav nav a,.customer-account-nav nav button,.account-chat-nav{font-size:11px!important}
+  .chat-message p,.account-chat form input{font-size:13px}
+  .order-progress span{font-size:10px}
+}

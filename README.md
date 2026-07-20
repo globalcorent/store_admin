@@ -53,6 +53,7 @@ Before launch, add a sharp actual photo, verified size, materials or ingredients
 - The account dashboard includes the Aroma Assistant chat panel for immediate guided answers about linked orders, shipping, returns, products, and candle care, with direct phone and email handoff.
 - The shopping cart shows candle-bundle progress, free-shipping progress, discount savings, estimated shipping, the pre-tax total, inventory-aware quantities, delivery expectations, and smart add-on recommendations before Stripe checkout.
 - Each product supports an ordered gallery of up to 8 photos. Administrators can upload several images at once, choose the cover, reorder views, and remove photos from the protected product editor.
+- Storefront, cart, account, chat, policy, and admin text use a readability floor designed to remain comfortable on desktop and mobile screens.
 - The protected dashboard is at `admin.html`.
 - Sign up with `adw.com1660@gmail.com` and confirm the email to receive the admin role.
 - Product, order, subscriber, review, and profile access remains enforced by database RLS even if someone directly opens the admin URL.
