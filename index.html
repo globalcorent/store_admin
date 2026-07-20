@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=11">
+  <link rel="stylesheet" href="styles.css?v=13">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"OnlineStore","name":"Aromatic Designer Works","url":"https://globalcorent.github.io/store_admin/","description":"Handmade gel candles, wax candles, soaps, and candle accessories from Brooklyn, New York.","email":"adw.com1660@gmail.com","telephone":"+1-347-423-9364","areaServed":"US","paymentAccepted":"Credit Card"}
   </script>
@@ -140,10 +140,12 @@
     <div class="cart-summary">
       <div class="cart-totals" aria-label="Cart totals">
         <div class="cart-total-line"><span>Merchandise</span><strong class="cart-merchandise">$0.00</strong></div>
-        <div class="cart-total-line cart-savings-row"><span>Candle bundle savings</span><strong class="cart-savings">−$0.00</strong></div>
+        <div class="cart-total-line cart-savings-row"><span class="cart-discount-label">Promotion savings</span><strong class="cart-savings">−$0.00</strong></div>
         <div class="cart-total-line"><span>Standard U.S. shipping</span><strong class="cart-shipping">$7.95</strong></div>
         <div class="cart-total-line cart-total-row"><span>Estimated total <small>before tax</small></span><strong class="cart-subtotal">$0.00</strong></div>
       </div>
+      <details class="cart-coupon"><summary>Have a coupon code?</summary><form class="cart-coupon-form"><label class="sr-only" for="cart-coupon-code">Coupon code</label><input id="cart-coupon-code" maxlength="32" autocomplete="off" placeholder="Enter code"><button type="submit">Apply</button></form><p class="cart-coupon-message" aria-live="polite"></p></details>
+      <div class="cart-discount-confirmation" hidden><span>✓</span><p><strong class="cart-promotion-name">Promotion applied</strong><small class="cart-discount-copy">Your qualifying savings are included above.</small></p></div>
       <p class="account-order-note"><a href="auth.html">Sign in before checkout</a> to save this purchase to your account.</p>
       <div class="cart-delivery"><span>♢</span><p><strong>Handmade, then carefully packed</strong><small>1 business day to prepare • approximately 5–7 business days in transit</small></p></div>
       <button class="button primary checkout-button"><span>▣</span> Continue to secure checkout</button>
@@ -156,6 +158,6 @@
   <dialog class="product-dialog"><button class="icon-button dialog-close" aria-label="Close product details">×</button><div class="dialog-content"></div></dialog>
   <div class="toast" role="status" aria-live="polite"></div>
   <script src="config.js"></script>
-  <script type="module" src="app.js?v=8"></script>
+  <script type="module" src="app.js?v=10"></script>
 </body>
 </html>

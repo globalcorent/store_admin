@@ -4,27 +4,33 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Store Admin | Aromatic Designer Works</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="account.css?v=10">
+  <link rel="stylesheet" href="account.css?v=12">
 </head>
 <body class="admin-body">
   <aside class="admin-sidebar">
     <a class="admin-brand" href="index.html"><img src="assets/logo.png" alt="Aromatic Designer Works"></a>
     <p class="admin-label">STORE MANAGEMENT</p>
-    <nav><a class="active" href="#overview"><span>⌂</span> Overview</a><a href="#products-panel"><span>◇</span> Products</a><a href="#orders-panel"><span>□</span> Orders</a><a href="#reviews-panel"><span>★</span> Reviews</a><a href="index.html"><span>↗</span> View storefront</a></nav>
+    <nav><a class="active" href="#overview"><span>⌂</span> Overview</a><a href="#products-panel"><span>◇</span> Products</a><a href="#promotions-panel"><span>%</span> Promotions</a><a href="#orders-panel"><span>□</span> Orders</a><a href="#reviews-panel"><span>★</span> Reviews</a><a href="index.html"><span>↗</span> View storefront</a></nav>
     <div class="admin-sidebar-foot"><small>Protected administrator area</small><button id="signout" class="sidebar-signout">Sign out</button></div>
   </aside>
   <main id="app" class="admin-workspace" hidden>
-    <header class="admin-topbar"><div><p class="admin-eyebrow">AROMATIC DESIGNER WORKS</p><h1>Run your store with confidence.</h1><p>Manage products, actual photos, handmade details, inventory, orders, and customer reviews.</p></div><button id="add" class="admin-primary">+ Add product</button></header>
+    <header class="admin-topbar"><div><p class="admin-eyebrow">AROMATIC DESIGNER WORKS</p><h1>Run your store with confidence.</h1><p>Manage products, photos, inventory, promotions, orders, and customer reviews.</p></div><button id="add" class="admin-primary">+ Add product</button></header>
     <section id="overview" class="admin-stats">
       <article><span class="stat-icon purple">◇</span><div><small>Products</small><b id="product-count">—</b><em>Catalog items</em></div></article>
       <article><span class="stat-icon orange">□</span><div><small>Orders</small><b id="order-count">—</b><em>All recorded orders</em></div></article>
       <article><span class="stat-icon pink">$</span><div><small>Paid sales</small><b id="sales-total">—</b><em>Recorded paid totals</em></div></article>
       <article><span class="stat-icon gold">✦</span><div><small>Subscribers</small><b id="subscriber-count">—</b><em>Email list</em></div></article>
       <article><span class="stat-icon green">★</span><div><small>Pending reviews</small><b id="review-count">—</b><em>Waiting for approval</em></div></article>
+      <article><span class="stat-icon pink">%</span><div><small>Active deals</small><b id="promotion-count">—</b><em>Coupons & bundles</em></div></article>
     </section>
     <section id="products-panel" class="admin-panel">
       <div class="panel-heading"><div><p class="admin-eyebrow">CATALOG</p><h2>Your handmade collection</h2><p>Use an actual product photo and complete details to give customers confidence before they buy.</p></div><div class="product-tools"><input id="product-search" type="search" placeholder="Search products…"><button id="add-secondary" class="admin-primary">+ New</button></div></div>
       <div id="products" class="admin-product-list"></div>
+    </section>
+    <section id="promotions-panel" class="admin-panel">
+      <div class="panel-heading"><div><p class="admin-eyebrow">COUPONS & PACKAGES</p><h2>Promotions that protect your margin</h2><p>Create a coupon code or an automatic quantity-based bundle. The cart and Stripe checkout use the same secure rules.</p></div><div class="promotion-tools"><button id="add-coupon" class="admin-secondary">+ Coupon code</button><button id="add-bundle" class="admin-primary">+ Bundle deal</button></div></div>
+      <div class="promotion-explainer"><span>ONE DEAL PER ORDER</span><p>The store automatically uses the eligible promotion that saves the customer the most, preventing accidental discount stacking.</p></div>
+      <div id="promotions" class="promotion-list"></div>
     </section>
     <section id="orders-panel" class="admin-panel">
       <div class="panel-heading"><div><p class="admin-eyebrow">SALES & FULFILLMENT</p><h2>Recent orders</h2><p>Open an order to mark it preparing, shipped, or delivered and add tracking information.</p></div></div>
@@ -66,6 +72,29 @@
       <div class="form-actions"><button type="button" class="admin-secondary" id="cancel">Cancel</button><button id="save-product" class="admin-primary">Save product</button></div>
     </form>
   </dialog>
+  <dialog id="promotion-editor" class="admin-dialog promotion-dialog">
+    <form id="promotion-form" class="product-form">
+      <div class="dialog-heading"><div><p class="admin-eyebrow">PROMOTION EDITOR</p><h2 id="promotion-form-title">Add promotion</h2></div><button type="button" class="dialog-x" id="promotion-dialog-x" aria-label="Close">×</button></div>
+      <input id="promotion-id" type="hidden">
+      <div class="promotion-editor-intro"><span>%</span><div><strong>Coupon, discount, or package deal</strong><p>Choose who qualifies and how much they save. Codes stay private and are validated securely at checkout.</p></div></div>
+      <div class="form-grid">
+        <label class="form-full">Promotion name<input id="promotion-name" maxlength="100" required placeholder="Example: Welcome 10% off"></label>
+        <label>How it activates<select id="promotion-mode"><option value="coupon">Customer enters a coupon code</option><option value="automatic">Applies automatically</option></select></label>
+        <label id="promotion-code-wrap">Coupon code<input id="promotion-code" maxlength="32" pattern="[A-Za-z0-9_-]{3,32}" placeholder="WELCOME10"></label>
+        <label>Discount type<select id="promotion-discount-type"><option value="percentage">Percentage off</option><option value="fixed_amount">Fixed dollar amount off</option></select></label>
+        <label><span id="promotion-value-label">Percentage</span><input id="promotion-value" type="number" min="1" max="90" step="1" required></label>
+        <label>Applies to<select id="promotion-applies-to"><option value="all">Entire merchandise cart</option><option value="candles">All gel & wax candles</option><option value="gel-candles">Gel candles only</option><option value="wax-candles">Wax candles only</option><option value="soaps">Handmade soaps</option><option value="accessories">Accessories</option></select></label>
+        <label>Minimum qualifying quantity<input id="promotion-min-quantity" type="number" min="1" max="100" value="1" required></label>
+        <label>Minimum cart merchandise <small>Optional</small><input id="promotion-min-subtotal" type="number" min="0" step=".01" value="0"></label>
+        <label>Status<select id="promotion-active"><option value="true">Active</option><option value="false">Paused</option></select></label>
+        <label>Starts <small>Optional</small><input id="promotion-starts" type="datetime-local"></label>
+        <label>Ends <small>Optional</small><input id="promotion-ends" type="datetime-local"></label>
+      </div>
+      <p class="promotion-rule-note">Bundle/package example: choose <b>Automatic</b>, <b>Percentage off</b>, <b>All candles</b>, then set the minimum quantity to 3.</p>
+      <p id="promotion-notice" class="form-notice" aria-live="polite"></p>
+      <div class="form-actions"><button type="button" class="admin-secondary" id="promotion-cancel">Cancel</button><button id="save-promotion" class="admin-primary">Save promotion</button></div>
+    </form>
+  </dialog>
   <dialog id="order-editor" class="admin-dialog order-dialog">
     <form id="order-form" class="product-form">
       <div class="dialog-heading"><div><p class="admin-eyebrow">ORDER FULFILLMENT</p><h2 id="order-form-title">Manage order</h2></div><button type="button" class="dialog-x" id="order-dialog-x" aria-label="Close">×</button></div>
@@ -81,6 +110,6 @@
       <div class="form-actions"><button type="button" class="admin-secondary" id="order-cancel">Cancel</button><button id="save-order" class="admin-primary">Save fulfillment</button></div>
     </form>
   </dialog>
-  <script src="config.js"></script><script type="module" src="admin.js?v=9"></script>
+  <script src="config.js"></script><script type="module" src="admin.js?v=10"></script>
 </body>
 </html>

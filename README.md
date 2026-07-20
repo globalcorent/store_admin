@@ -21,7 +21,7 @@ Open `http://localhost:8080`.
 1. Create a Supabase project.
 2. Apply every file in `supabase/migrations` in numeric order.
 3. The storefront is configured for Supabase project `rfauhbcnrmwqyowftlcq`.
-4. Use Supabase CLI help to confirm current commands, then link the project and deploy the five Edge Functions in `supabase/functions`.
+4. Use Supabase CLI help to confirm current commands, then link the project and deploy the six Edge Functions in `supabase/functions`.
 5. Add function secrets: `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`. Never place them in `config.js` or GitHub.
 
 ## Connect Stripe
@@ -39,6 +39,7 @@ Prices are read from Supabase inside the checkout function. The browser cannot a
 
 - Products, actual photos, details, and inventory: protected `admin.html`
 - Review approval and removal: protected `admin.html`
+- Coupon codes, automatic discounts, and quantity-based package deals: protected `admin.html` → Promotions
 - Newsletter signups: Supabase Table Editor → `newsletter_subscribers`
 - Contact details and store copy: `index.html`
 - Store colors: variables at the top of `styles.css`
@@ -52,7 +53,9 @@ Before launch, add a sharp actual photo, verified size, materials or ingredients
 - The protected customer dashboard is at `account.html`. It shows order history, fulfillment progress, tracking links, saved profile name, support shortcuts, and a buy-again action for available products.
 - The account dashboard includes the Aroma Assistant chat panel for immediate guided answers about linked orders, shipping, returns, products, and candle care, with direct phone and email handoff.
 - The shopping cart shows candle-bundle progress, free-shipping progress, discount savings, estimated shipping, the pre-tax total, inventory-aware quantities, delivery expectations, and smart add-on recommendations before Stripe checkout.
-- Three or more gel or wax candles activate the same 15% unit-price calculation in the browser and Stripe checkout, with original prices, savings, and the applied discount shown clearly in the cart.
+- Administrators can create percentage or fixed-dollar coupon codes and automatic package deals, choose eligible collections, require a minimum quantity or merchandise subtotal, schedule dates, and pause promotions.
+- The cart quote and Stripe checkout use the same server-side promotion engine. One best promotion is applied per order, so coupons cannot stack or override a better automatic deal.
+- Three or more gel or wax candles activate the seeded 15% deal, with original prices, savings, and the applied discount shown clearly in the cart.
 - On phones, the cart uses a spacious full-page scroll with stacked offers, simplified product rows, separated totals, and readable trust information.
 - Each product supports an ordered gallery of up to 8 photos. Administrators can upload several images at once, choose the cover, reorder views, and remove photos from the protected product editor.
 - Storefront, cart, account, chat, policy, and admin text use a readability floor designed to remain comfortable on desktop and mobile screens.

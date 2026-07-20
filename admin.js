@@ -1,6 +1,6 @@
 import{createClient}from"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 const config=window.STORE_CONFIG||{},supabase=createClient(config.SUPABASE_URL,config.SUPABASE_PUBLISHABLE_KEY),$=selector=>document.querySelector(selector);
-let products=[],orders=[],reviews=[],galleryDraft=[],removedGallery=[],currentProduct=null,currentOrder=null;
+let products=[],promotions=[],orders=[],reviews=[],galleryDraft=[],removedGallery=[],currentProduct=null,currentOrder=null;
 const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const money=cents=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format((cents||0)/100);
 const fallbackImage=category=>({"gel-candles":"assets/collection-gel-candles.webp","wax-candles":"assets/collection-wax-candles.webp",candles:"assets/collection-wax-candles.webp",soaps:"assets/collection-soaps.webp",accessories:"assets/collection-accessories.webp"}[category]||"assets/collection-wax-candles.webp");
@@ -16,19 +16,21 @@ if(!session)location.replace("auth.html");else{
 }
 
 async function loadDashboard(){
-  const[productResult,orderResult,orderCountResult,subscriberResult,reviewResult,salesResult]=await Promise.all([
+  const[productResult,promotionResult,orderResult,orderCountResult,subscriberResult,reviewResult,salesResult]=await Promise.all([
     supabase.from("products").select("*,product_images(id,image_url,image_path,alt_text,sort_order,created_at)").order("sort_order"),
+    supabase.from("promotions").select("*").order("created_at",{ascending:false}),
     supabase.from("orders").select("id,customer_name,customer_email,status,amount_total_cents,currency,shipping,fulfillment_status,tracking_number,tracking_url,shipped_at,delivered_at,created_at,order_items(id,product_name,quantity,unit_price_cents)").order("created_at",{ascending:false}).limit(100),
     supabase.from("orders").select("id",{count:"exact",head:true}),
     supabase.from("newsletter_subscribers").select("id",{count:"exact",head:true}),
     supabase.from("reviews").select("id,product_id,author_name,rating,title,body,approved,verified_purchase,created_at").order("created_at",{ascending:false}),
     supabase.from("orders").select("amount_total_cents").eq("status","paid")
   ]);
-  const failed=[productResult,orderResult,reviewResult,salesResult].find(result=>result.error);if(failed?.error){alert(`Could not load the dashboard: ${failed.error.message}`);return}
-  products=productResult.data||[];orders=orderResult.data||[];reviews=reviewResult.data||[];
+  const failed=[productResult,promotionResult,orderResult,reviewResult,salesResult].find(result=>result.error);if(failed?.error){alert(`Could not load the dashboard: ${failed.error.message}`);return}
+  products=productResult.data||[];promotions=promotionResult.data||[];orders=orderResult.data||[];reviews=reviewResult.data||[];
   $("#product-count").textContent=products.length;$("#order-count").textContent=orderCountResult.count||0;$("#subscriber-count").textContent=subscriberResult.count||0;$("#review-count").textContent=reviews.filter(review=>!review.approved).length;
   $("#sales-total").textContent=money((salesResult.data||[]).reduce((sum,order)=>sum+order.amount_total_cents,0));
-  renderProducts();renderOrders();renderReviews();
+  $("#promotion-count").textContent=promotions.filter(promotionIsLive).length;
+  renderProducts();renderPromotions();renderOrders();renderReviews();
 }
 
 function renderProducts(){
@@ -43,6 +45,30 @@ function renderProducts(){
   document.querySelectorAll(".edit-button").forEach(button=>button.onclick=()=>openEditor(products.find(product=>product.id===button.dataset.id)));
   document.querySelectorAll(".delete-button").forEach(button=>button.onclick=()=>deleteProduct(button.dataset.id));
 }
+
+const promotionScopeLabel=scope=>({all:"Entire cart",candles:"All candles","gel-candles":"Gel candles","wax-candles":"Wax candles",soaps:"Handmade soaps",accessories:"Accessories"}[scope]||scope);
+const promotionIsLive=promotion=>promotion.active&&(!promotion.starts_at||new Date(promotion.starts_at)<=new Date())&&(!promotion.ends_at||new Date(promotion.ends_at)>new Date());
+const promotionValueLabel=promotion=>promotion.discount_type==="percentage"?`${promotion.discount_value}% off`:`${money(promotion.discount_value)} off`;
+const dateInputValue=value=>value?new Date(new Date(value).getTime()-new Date(value).getTimezoneOffset()*60000).toISOString().slice(0,16):"";
+function promotionRequirement(promotion){const parts=[];if(promotion.min_quantity>1)parts.push(`${promotion.min_quantity}+ qualifying items`);if(promotion.min_subtotal_cents>0)parts.push(`${money(promotion.min_subtotal_cents)} cart minimum`);return parts.join(" • ")||"No additional minimum"}
+function promotionSchedule(promotion){if(promotion.ends_at&&new Date(promotion.ends_at)<=new Date())return"Ended";if(promotion.starts_at&&new Date(promotion.starts_at)>new Date())return`Starts ${new Date(promotion.starts_at).toLocaleDateString()}`;if(promotion.ends_at)return`Ends ${new Date(promotion.ends_at).toLocaleDateString()}`;return"No end date"}
+function renderPromotions(){
+  $("#promotions").innerHTML=promotions.length?promotions.map(promotion=>`<article class="promotion-card ${promotionIsLive(promotion)?"live":"paused"}">
+    <div class="promotion-value"><b>${escapeHtml(promotionValueLabel(promotion))}</b><span>${promotion.mode==="coupon"?"Coupon":"Automatic"}</span></div>
+    <div class="promotion-copy"><div><span class="promotion-status">${promotionIsLive(promotion)?"LIVE":promotion.active?"SCHEDULED / ENDED":"PAUSED"}</span>${promotion.code?`<code>${escapeHtml(promotion.code)}</code>`:""}</div><h3>${escapeHtml(promotion.name)}</h3><p>${escapeHtml(promotionScopeLabel(promotion.applies_to))} • ${escapeHtml(promotionRequirement(promotion))} • ${escapeHtml(promotionSchedule(promotion))}</p></div>
+    <div class="promotion-actions"><button class="edit-promotion" data-promotion-edit="${promotion.id}">Edit</button><button class="toggle-promotion" data-promotion-toggle="${promotion.id}" data-active="${promotion.active}">${promotion.active?"Pause":"Activate"}</button><button class="delete-promotion" data-promotion-delete="${promotion.id}" aria-label="Delete ${escapeHtml(promotion.name)}">×</button></div>
+  </article>`).join(""):'<div class="empty-state"><b>No promotions yet</b><p>Create a coupon code or automatic bundle deal.</p></div>';
+  document.querySelectorAll("[data-promotion-edit]").forEach(button=>button.onclick=()=>openPromotionEditor(promotions.find(item=>item.id===button.dataset.promotionEdit)));
+  document.querySelectorAll("[data-promotion-toggle]").forEach(button=>button.onclick=()=>togglePromotion(button.dataset.promotionToggle,button.dataset.active!=="true"));
+  document.querySelectorAll("[data-promotion-delete]").forEach(button=>button.onclick=()=>deletePromotion(button.dataset.promotionDelete));
+}
+
+function syncPromotionFields(){const coupon=$("#promotion-mode").value==="coupon",fixed=$("#promotion-discount-type").value==="fixed_amount";$("#promotion-code-wrap").hidden=!coupon;$("#promotion-code").required=coupon;$("#promotion-value-label").textContent=fixed?"Dollar amount":"Percentage";$("#promotion-value").step=fixed?".01":"1";$("#promotion-value").max=fixed?"1000":"90"}
+function openPromotionEditor(promotion={},preset="coupon"){
+  const isExisting=Boolean(promotion.id),mode=isExisting?promotion.mode:preset==="bundle"?"automatic":"coupon";$("#promotion-form").reset();$("#promotion-id").value=promotion.id||"";$("#promotion-name").value=promotion.name||(preset==="bundle"?"New bundle deal":"New customer coupon");$("#promotion-mode").value=mode;$("#promotion-code").value=promotion.code||"";$("#promotion-discount-type").value=promotion.discount_type||"percentage";$("#promotion-value").value=promotion.discount_value!=null?(promotion.discount_type==="fixed_amount"?(promotion.discount_value/100).toFixed(2):promotion.discount_value):(preset==="bundle"?15:10);$("#promotion-applies-to").value=promotion.applies_to||(preset==="bundle"?"candles":"all");$("#promotion-min-quantity").value=promotion.min_quantity||(preset==="bundle"?3:1);$("#promotion-min-subtotal").value=promotion.min_subtotal_cents?(promotion.min_subtotal_cents/100).toFixed(2):"0";$("#promotion-active").value=String(promotion.active??true);$("#promotion-starts").value=dateInputValue(promotion.starts_at);$("#promotion-ends").value=dateInputValue(promotion.ends_at);$("#promotion-form-title").textContent=isExisting?"Edit promotion":preset==="bundle"?"Add bundle deal":"Add coupon code";$("#promotion-notice").textContent="";syncPromotionFields();$("#promotion-editor").showModal();
+}
+async function togglePromotion(id,active){const{error}=await supabase.from("promotions").update({active}).eq("id",id);if(error){alert(error.message);return}await loadDashboard()}
+async function deletePromotion(id){const promotion=promotions.find(item=>item.id===id);if(!promotion||!confirm(`Delete "${promotion.name}"? This coupon or deal will stop working immediately.`))return;const{error}=await supabase.from("promotions").delete().eq("id",id);if(error){alert(error.message);return}await loadDashboard()}
 
 function renderOrders(){
   $("#orders").innerHTML=orders.length?`<div class="admin-table-wrap"><table><thead><tr><th>Date</th><th>Customer</th><th>Payment</th><th>Fulfillment</th><th>Total</th><th></th></tr></thead><tbody>${orders.slice(0,25).map(order=>`<tr><td>${new Date(order.created_at).toLocaleDateString()}</td><td><strong>${escapeHtml(order.customer_name||"Guest")}</strong><small class="table-subline">${escapeHtml(order.customer_email||"—")}</small></td><td><span class="order-status payment">${escapeHtml(order.status)}</span></td><td><span class="order-status fulfillment ${escapeHtml(order.fulfillment_status)}">${escapeHtml(fulfillmentLabel(order.fulfillment_status))}</span></td><td><strong>${money(order.amount_total_cents)}</strong></td><td><button class="manage-order" data-order-id="${order.id}">Manage</button></td></tr>`).join("")}</tbody></table></div>`:'<div class="empty-state"><b>No orders yet</b><p>Paid Stripe orders will appear here automatically.</p></div>';
@@ -127,4 +153,12 @@ $("#order-form").onsubmit=async event=>{
   $("#order-editor").close();save.disabled=false;save.textContent="Save fulfillment";await loadDashboard();
 };
 $("#order-cancel").onclick=()=>$("#order-editor").close();$("#order-dialog-x").onclick=()=>$("#order-editor").close();
+$("#promotion-mode").onchange=syncPromotionFields;$("#promotion-discount-type").onchange=syncPromotionFields;$("#promotion-code").oninput=()=>{$("#promotion-code").value=$("#promotion-code").value.toUpperCase().replace(/[^A-Z0-9_-]/g,"")};
+$("#add-coupon").onclick=()=>openPromotionEditor({},"coupon");$("#add-bundle").onclick=()=>openPromotionEditor({},"bundle");$("#promotion-cancel").onclick=()=>$("#promotion-editor").close();$("#promotion-dialog-x").onclick=()=>$("#promotion-editor").close();
+$("#promotion-form").onsubmit=async event=>{
+  event.preventDefault();const save=$("#save-promotion"),id=$("#promotion-id").value,mode=$("#promotion-mode").value,discountType=$("#promotion-discount-type").value,value=Number($("#promotion-value").value),starts=$("#promotion-starts").value,ends=$("#promotion-ends").value;$("#promotion-notice").textContent="";
+  if(starts&&ends&&new Date(ends)<=new Date(starts)){$("#promotion-notice").textContent="The end date must be later than the start date.";return}
+  const row={name:$("#promotion-name").value.trim(),mode,code:mode==="coupon"?$("#promotion-code").value.trim().toUpperCase():null,discount_type:discountType,discount_value:discountType==="percentage"?Math.round(value):Math.round(value*100),applies_to:$("#promotion-applies-to").value,min_quantity:Number($("#promotion-min-quantity").value),min_subtotal_cents:Math.round(Number($("#promotion-min-subtotal").value||0)*100),active:$("#promotion-active").value==="true",starts_at:starts?new Date(starts).toISOString():null,ends_at:ends?new Date(ends).toISOString():null};
+  save.disabled=true;save.textContent="Saving promotion…";const result=id?await supabase.from("promotions").update(row).eq("id",id):await supabase.from("promotions").insert(row);if(result.error){$("#promotion-notice").textContent=result.error.code==="23505"?"That coupon code already exists. Choose another code.":result.error.message;save.disabled=false;save.textContent="Save promotion";return}$("#promotion-editor").close();save.disabled=false;save.textContent="Save promotion";await loadDashboard();
+};
 $("#signout").onclick=async()=>{await supabase.auth.signOut();location.replace("auth.html")};
